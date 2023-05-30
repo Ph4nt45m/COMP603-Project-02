@@ -25,11 +25,12 @@ import javax.swing.border.Border;
 public class Booking extends JFrame {
 
     Homepage homepage;
+    RoomTypes roomTypesMenu;
 
     public Booking(Homepage home) {
         this.homepage = home;
         setComponents();
-        setLocationRelativeTo(null);
+        setLocation((homepage.width / 2) - (this.getWidth() / 2), 200);
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -103,17 +104,15 @@ public class Booking extends JFrame {
         pack();
     }
 
-    // Make a Booking Button
     private void makeBookingActionPerformed(ActionEvent evt) {
-        
+        roomTypesMenu = new RoomTypes(homepage, this);
+        setVisible(false);
     }
 
-    // Check my Booking Button
     private void checkBookingActionPerformed(ActionEvent evt) {
         
     }
 
-    // Return to Homepage Button
     private void returnHomepageActionPerformed(ActionEvent evt) {
         homepage.setVisible(true);
         homepage.setLocationRelativeTo(null);
