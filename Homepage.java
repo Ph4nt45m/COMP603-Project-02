@@ -19,12 +19,18 @@ public class Homepage extends JFrame {
 
     protected DBManager dbManager;
     protected Booking bookingMenu;
+    Toolkit toolKit;
+    Dimension screenDim;
+    int width;
 
     public Homepage() {
         dbManager = new DBManager();
         dbManager.establishConnection();
+        toolKit = Toolkit.getDefaultToolkit();
+        screenDim = toolKit.getScreenSize();
+        width = screenDim.width;
         setComponents();
-        this.setLocationRelativeTo(null);
+        setLocation((width / 2) - (this.getWidth() / 2), 200);
 
         addWindowListener(new WindowAdapter() {
             @Override
