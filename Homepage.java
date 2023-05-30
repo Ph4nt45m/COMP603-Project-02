@@ -19,6 +19,9 @@ public class Homepage extends JFrame {
 
     protected DBManager dbManager;
     protected Booking bookingMenu;
+    protected Facilities facilities;
+    protected Vouchers vouchers;
+
     Toolkit toolKit;
     Dimension screenDim;
     int width;
@@ -131,7 +134,10 @@ public class Homepage extends JFrame {
     }
 
     private void facilitiesButton(ActionEvent event) {
-
+        setVisible(false);
+        facilities = new Facilities(this);
+        facilities.setLocationRelativeTo(null);
+        facilities.setVisible(true);
     }
 
     private void faqButton(ActionEvent event) {
