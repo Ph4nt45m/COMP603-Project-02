@@ -50,6 +50,10 @@ public class DiscountMenu extends JFrame {
     Homepage homepage;
     BookingDetails bookDetails;
     private boolean validInput;
+    
+    public DiscountMenu() {
+        setComponents();
+    }
 
     public DiscountMenu(Homepage home, BookingDetails bookingDetails) {
         this.homepage = home;
