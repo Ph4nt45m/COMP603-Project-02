@@ -13,7 +13,7 @@ import java.awt.event.WindowEvent;
 
 /**
  *
- * @author snipi
+ * @author m4ria
  */
 public class Homepage extends JFrame {
 
@@ -21,6 +21,7 @@ public class Homepage extends JFrame {
     protected Booking bookingMenu;
     protected Facilities facilities;
     protected Vouchers vouchers;
+    protected Contacts contacts;
 
     Toolkit toolKit;
     Dimension screenDim;
@@ -77,7 +78,7 @@ public class Homepage extends JFrame {
         });
 
         facilities.setPreferredSize(new Dimension(200, 45));
-        facilities.addActionListener(new ActionListener(){
+        facilities.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 facilitiesButton(e);
@@ -85,7 +86,7 @@ public class Homepage extends JFrame {
         });
 
         faqs.setPreferredSize(new Dimension(200, 45));
-        faqs.addActionListener(new ActionListener(){
+        faqs.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 faqButton(e);
@@ -93,7 +94,7 @@ public class Homepage extends JFrame {
         });
 
         vouchers.setPreferredSize(new Dimension(200, 45));
-        vouchers.addActionListener(new ActionListener(){
+        vouchers.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 vouchersButton(e);
@@ -101,7 +102,7 @@ public class Homepage extends JFrame {
         });
 
         contact.setPreferredSize(new Dimension(200, 45));
-        contact.addActionListener(new ActionListener(){
+        contact.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 contactButton(e);
@@ -145,10 +146,16 @@ public class Homepage extends JFrame {
     }
 
     private void vouchersButton(ActionEvent event) {
-
+        setVisible(false);
+        vouchers = new Vouchers(this);
+        vouchers.setLocationRelativeTo(null);
+        vouchers.setVisible(true);
     }
 
     private void contactButton(ActionEvent event) {
-
+        setVisible(false);
+        contacts = new Contacts(this);
+        contacts.setLocationRelativeTo(null);
+        contacts.setVisible(true);
     }
 }
