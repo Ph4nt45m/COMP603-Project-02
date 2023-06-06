@@ -20,7 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.WindowConstants;
 
 /**
  *
@@ -28,30 +27,30 @@ import javax.swing.WindowConstants;
  */
 public class BookingDetails extends JFrame {
 
-    protected JLabel bDateErrorMsg;
-    protected JLabel bDateFormatLabel;
+    private JButton homeButton;
+    private JButton backButton;
+    private JLabel title;
+    private JLabel bDateLabel;
     protected JTextField bDateInput;
-    protected JLabel bDateLabel;
-    protected JButton back;
-    protected JButton book;
-    protected JLabel durationFormatLabel;
+    private JLabel bDateErrorMsg;
+    private JLabel bDateFormatLabel;
+    private JLabel durationLabel;
     protected JTextField durationInput;
-    protected JLabel durationLabel;
-    protected JButton homeButton;
-    protected JLabel lDateErrorMsg;
-    protected JPanel mainPanel;
-    protected JLabel title;
+    private JLabel lDateErrorMsg;
+    private JLabel durationFormatLabel;
+    private JButton book;
+    private JPanel mainPanel;
 
+    protected final int width = 800;
+    protected final int height = 400;
     protected Homepage homepage;
     protected RoomTypes roomTypes;
     protected DatePicker datePicker;
     protected DiscountMenu discounts;
     protected LocalDateTime currentTime;
-    protected final int[] months30 = {4, 6, 9, 11};
+    private final int[] months30 = {4, 6, 9, 11};
     protected boolean validBDate;
     protected boolean validLDate;
-    protected boolean bookToday;
-    protected boolean longStay;
     protected Date dateBooked;
     protected Date dateLeave;
 
@@ -61,40 +60,235 @@ public class BookingDetails extends JFrame {
         this.datePicker = new DatePicker(this);
         this.validBDate = false;
         this.validLDate = false;
-        this.bookToday = true;
-        this.longStay = false;
         setComponents();
-        bDateInput.setText(datePicker.currentDate);
+    }
 
-        addWindowListener(new WindowAdapter() {
+    private void setComponents() {
+        homeButton = new JButton();
+        backButton = new JButton();
+        title = new JLabel();
+        bDateLabel = new JLabel();
+        bDateInput = new JTextField();
+        bDateErrorMsg = new JLabel();
+        bDateFormatLabel = new JLabel();
+        durationLabel = new JLabel();
+        durationInput = new JTextField();
+        lDateErrorMsg = new JLabel();
+        durationFormatLabel = new JLabel();
+        book = new JButton();
+        mainPanel = new JPanel();
+
+        setHomeButton();
+        setBackButton();
+        setTitle();
+        setBDateLabel();
+        setBDateInput();
+        setBDateErrorMsg();
+        setBDateFormatLabel();
+        setDurationLabel();
+        setDurationInput();
+        setDurationErrorMsg();
+        setDurationFormatLabel();
+        setBookButton();
+        setMainPanel();
+        setFrame();
+    }
+
+    private void setHomeButton() {
+        homeButton.setText("Homepage");
+        homeButton.setBounds(10, 10, 100, 30);
+
+        homeButton.addActionListener(new ActionListener() {
             @Override
-            public void windowClosing(WindowEvent e) {
-                homepage.dbManager.closeConnections();
-
-                dispose();
-                System.exit(0);
+            public void actionPerformed(ActionEvent e) {
+                homeButtonAction(e);
             }
         });
+    }
 
-        setLocation((homepage.width / 2) - (this.getWidth() / 2), 200);
-        setVisible(true);
+    private void homeButtonAction(ActionEvent evt) {
+        if (!roomTypes.booking.isDisplayable()) {
+            roomTypes.booking.dispose();
+        }
+        if (!roomTypes.isDisplayable()) {
+            roomTypes.dispose();
+        }
+        if (roomTypes.roomDetails.isDisplayable()) {
+            roomTypes.roomDetails.dispose();
+        }
+        if (datePicker.isDisplayable()) {
+            datePicker.dispose();
+        }
+        if (dateBooked != null) {
+            dateBooked = null;
+            validBDate = false;
+        }
+        if (dateLeave != null) {
+            dateLeave = null;
+            validLDate = false;
+        }
+
+        homepage.setLocation(((homepage.screenWidth / 2) - (homepage.width / 2)), ((homepage.screenHeight / 2) - (homepage.height / 2)));
+        homepage.setVisible(true);
+        if (isDisplayable()) {
+            dispose();
+        }
+    }
+
+    private void setBackButton() {
+        backButton.setText("Back");
+        backButton.setBounds(10, 50, 100, 30);
+
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                backButtonAction(e);
+            }
+        });
+    }
+
+    private void backButtonAction(ActionEvent evt) {
+        if (datePicker.isDisplayable()) {
+            datePicker.dispose();
+        }
+
+        roomTypes.setLocation((homepage.width / 2) - (roomTypes.getWidth() / 2), ((homepage.height / 2) - (roomTypes.getHeight())));
+        roomTypes.roomDetails.setLocation(roomTypes.getX() + 8, (roomTypes.getY() + roomTypes.getHeight() - 2));
+        roomTypes.setVisible(true);
+        roomTypes.roomDetails.setVisible(true);
+        if (isDisplayable()) {
+            dispose();
+        }
+    }
+
+    private void setTitle() {
+        title.setFont(new Font("Segoe UI", 0, 24));
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        title.setText("Booking Details");
+        title.setBounds(265, 40, 270, 50);
+    }
+
+    private void setBDateLabel() {
+        bDateLabel.setFont(new Font("Segoe UI", 0, 18));
+        bDateLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+        bDateLabel.setText("Booking Date:");
+        bDateLabel.setBounds(30, 143, 200, 20);
+    }
+
+    private void setBDateInput() {
+        bDateInput.setFont(new Font("Segoe UI", 0, 17));
+        bDateInput.setBounds(240, 140, 290, 30);
+        bDateInput.setText(datePicker.currentDate);
+
+        bDateInput.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                int x = bDateInput.getLocationOnScreen().x + bDateInput.getWidth();
+                int y = bDateInput.getLocationOnScreen().y;
+                datePicker.setLocation(x, y);
+                datePicker.setVisible(true);
+            }
+        });
+    }
+
+    private void setBDateErrorMsg() {
+        bDateErrorMsg.setForeground(Color.red);
+        bDateErrorMsg.setBounds(540, 140, 250, 32);
+    }
+
+    private void setBDateFormatLabel() {
+        bDateFormatLabel.setFont(new Font("Segoe UI", 2, 15));
+        bDateFormatLabel.setText("DD/MM/YYYY");
+        bDateFormatLabel.setBounds(245, 170, 120, 20);
+    }
+
+    private void setDurationLabel() {
+        durationLabel.setFont(new Font("Segoe UI", 0, 18));
+        durationLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+        durationLabel.setText("Duration of stay:");
+        durationLabel.setBounds(30, 230, 200, 20);
+    }
+
+    private void setDurationInput() {
+        durationInput.setFont(new Font("Segoe UI", 0, 17));
+        durationInput.setBounds(240, 228, 290, 30);
+
+        durationInput.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (datePicker.isVisible()) {
+                    datePicker.setVisible(false);
+                }
+            }
+        });
+    }
+
+    private void setDurationErrorMsg() {
+        lDateErrorMsg.setForeground(Color.red);
+        lDateErrorMsg.setBounds(540, 228, 250, 32);
+    }
+
+    private void setDurationFormatLabel() {
+        durationFormatLabel.setFont(new Font("Segoe UI", 2, 15));
+        durationFormatLabel.setText("Number of days (Max: 100)");
+        durationFormatLabel.setBounds(245, 260, 200, 20);
+    }
+
+    private void setBookButton() {
+        book.setFont(new Font("Segoe UI", 0, 18));
+        book.setText("Book Room");
+        book.setBounds(335, 320, 140, 40);
+
+        book.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                bookButtonAction(e);
+            }
+        });
+    }
+
+    private void bookButtonAction(ActionEvent evt) {
+        if (!bDateErrorMsg.getText().isEmpty()) {
+            bDateErrorMsg.setText("");
+        }
+        if (!lDateErrorMsg.getText().isEmpty()) {
+            lDateErrorMsg.setText("");
+        }
+
+        if (!bDateInput.getText().isEmpty()) {
+            verifyBookDate();
+        } else {
+            setBDateErrMsg();
+        }
+
+        if (!durationInput.getText().isEmpty()) {
+            verifyLeaveDate();
+        } else {
+            setLDateErrMsg();
+        }
+
+        if (validBDate && validLDate) {
+            if (!bDateErrorMsg.getText().isEmpty()) {
+                bDateErrorMsg.setText("");
+            }
+            if (!lDateErrorMsg.getText().isEmpty()) {
+                lDateErrorMsg.setText("");
+            }
+
+            discounts = new DiscountMenu(this.homepage, this);
+            if (datePicker.isVisible()) {
+                datePicker.setVisible(false);
+            }
+            if (isVisible()) {
+                setVisible(false);
+            }
+        }
     }
 
     private void verifyBookDate() {
         String holder = bDateInput.getText();
-        boolean validLength = true;
-        if (holder.length() >= 8 && holder.length() <= 10) {
-            if (!holder.contains("/")) {
-                validLength = false;
-            }
-        } else {
-            validLength = false;
-        }
-
-        boolean validChars = false;
-        if (validLength) {
-            validChars = verifyBCharacters(holder);
-        }
+        boolean validChars = true;
+        validChars = verifyCharacters(holder);
 
         if (validChars) {
             String[] check = holder.split("/");
@@ -103,34 +297,63 @@ public class BookingDetails extends JFrame {
             int year = Integer.parseInt(check[2]);
             boolean valid = true;
 
-            if (!(year >= datePicker.year) || (year >= datePicker.year + 2)) {
+            if (year < datePicker.year) {
                 valid = false;
+                bDateErrorMsg.setText("* Date already past");
             }
-            if (!(month > 0 && month <= 12) || (year == datePicker.year && month < datePicker.month)) {
+            if (year > datePicker.year + 2) {
                 valid = false;
+                bDateErrorMsg.setText("* Out of bounds");
+            }
+            if (!(month > 0 && month <= 12)) {
+                valid = false;
+                bDateErrorMsg.setText("* Invalid input");
+            }
+            if (year == datePicker.year && month < datePicker.month) {
+                valid = false;
+                bDateErrorMsg.setText("* Date already past");
             }
 
-            int dayMaxLimit = setDayLimit(month, year);
-            if (!(day > 0 && day <= dayMaxLimit)) {
-                // Don't do anything, day is not valid
-            } else if (year == datePicker.year && month == datePicker.month && day < datePicker.day) {
-                // Don't do anything, day is not valid
-            } else if (year == datePicker.year && month == datePicker.month && day == datePicker.day) {
-                currentTime = LocalDateTime.now();
-                int currentHour = currentTime.getHour();
-                if (currentHour >= 23) {
-                    bookToday = false;
+            if (valid) {
+                int dayMaxLimit = setDayLimit(month, year);
+                if (!(day > 0 && day <= dayMaxLimit)) {
+                    bDateErrorMsg.setText("* Invalid input");
+                } else if (year == datePicker.year && month == datePicker.month && day < datePicker.day) {
+                    bDateErrorMsg.setText("* Date already past");
+                } else if (year == datePicker.year && month == datePicker.month && day == datePicker.day) {
+                    currentTime = LocalDateTime.now();
+                    int currentHour = currentTime.getHour();
+                    if (currentHour >= 23) {
+                        bDateErrorMsg.setText("* Too late to book today");
+                    } else {
+                        validBDate = true;
+                        setDateBooked(day, month, year);
+                    }
                 } else {
                     validBDate = true;
+                    setDateBooked(day, month, year);
                 }
-            } else {
-                validBDate = true;
             }
         }
 
-        if (!validBDate) {
+        if (!validBDate && bDateErrorMsg.getText().isEmpty()) {
+            bDateErrorMsg.setText("* Invalid input");
+            setBDateErrMsg();
+        } else if (!validBDate && !bDateErrorMsg.getText().isEmpty()) {
             setBDateErrMsg();
         }
+    }
+
+    private void setDateBooked(int day, int month, int year) {
+        dateBooked = new Date(day, month, year);
+    }
+
+    private void setBDateErrMsg() {
+        if (bDateInput.getText().isEmpty()) {
+            bDateErrorMsg.setText("* Text field required");
+        }
+
+        bDateInput.setText(datePicker.currentDate);
     }
 
     private void verifyLeaveDate() {
@@ -143,50 +366,64 @@ public class BookingDetails extends JFrame {
             }
         }
 
-        int days = 0;
+        int duration = 0;
         if (valid) {
-            days = Integer.parseInt(holder);
-            if (days > 0 && days <= 100) {
+            duration = Integer.parseInt(holder);
+            if (duration <= 0) {
+                lDateErrorMsg.setText("* Invalid duration");
+            } else if (duration > 100) {
+                lDateErrorMsg.setText("* Beyond available duration");
+            } else {
                 validLDate = true;
-            } else if (days > 100) {
-                longStay = true;
             }
         }
 
-        if (!validLDate) {
+        if (validLDate) {
+            int day = dateBooked.getDay();
+            int month = dateBooked.getMonth();
+            int year = dateBooked.getYear();
+            setDateLeave(duration, day, month, year);
+        }
+
+        if (!validLDate && lDateErrorMsg.getText().isEmpty()) {
+            lDateErrorMsg.setText("* Invalid input");
+            setLDateErrMsg();
+        } else if (!validLDate && !lDateErrorMsg.getText().isEmpty()) {
             setLDateErrMsg();
         }
     }
 
-    private void setBDateErrMsg() {
-        bDateInput.setText(datePicker.currentDate);
+    private void setDateLeave(int duration, int currentDay, int currentMonth, int currentYear) {
+        int day = currentDay;
+        int month = currentMonth;
+        int year = currentYear;
+        int dayLimit = setDayLimit(month, year);
+        if ((day + duration) > dayLimit) {
+            duration -= ((dayLimit - day) + 1);
+            day = 1;
+            if (month + 1 > 12) {
+                month = 1;
+                year++;
+            } else {
+                month++;
+            }
 
-        if (bDateInput.getText().isEmpty()) {
-            bDateErrorMsg.setText("* Text field required");
-        } else if (!bookToday) {
-            bDateErrorMsg.setText("* Too late to book today");
+            setDateLeave(duration, day, month, year);
         } else {
-            bDateErrorMsg.setText("* Invalid input");
+            day += duration;
+            dateLeave = new Date(day, month, year);
         }
-
-        bDateErrorMsg.setForeground(Color.red);
     }
 
     private void setLDateErrMsg() {
-        durationInput.setText("");
-
         if (durationInput.getText().isEmpty()) {
-            lDateErrorMsg.setText("* Textfield required");
-        } else if (longStay) {
-            lDateErrorMsg.setText("* Max duration of stay: 100 days");
-        } else {
-            lDateErrorMsg.setText("* Invalid input");
+            lDateErrorMsg.setText("* Text field required");
         }
 
-        lDateErrorMsg.setForeground(Color.red);
+        durationInput.setText("");
     }
 
-    private int setDayLimit(int month, int year) {
+    protected int setDayLimit(int month, int year) {
         int limit = 0;
         if (month == 2) {
             if (!((year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0))) {
@@ -209,151 +446,57 @@ public class BookingDetails extends JFrame {
         return limit;
     }
 
-    private boolean verifyBCharacters(String date) {
+    protected boolean verifyCharacters(String date) {
         boolean valid = true;
-        int slashCount = 0;
-        for (int i = 0; i < date.length(); i++) {
-            if (!Character.isDigit(date.charAt(i)) || !("/".equals(date.charAt(i)))) {
-                valid = false;
-                break;
-            } else if ("/".equals(date.charAt(i))) {
-                slashCount++;
-            }
-
-            if (slashCount > 2) {
-                valid = false;
-                break;
-            }
-        }
-
-        if (slashCount != 2) {
+        if (!(date.length() > 7 && date.length() <= 10)) {
             valid = false;
-        } else {
-            String[] holder = date.split("/");
-            if (holder.length > 3) {
-                valid = false;
-            }
-            if (!(holder[0].length() > 0 && holder[0].length() <= 2)) {
-                valid = false;
-            }
-            if (!(holder[1].length() > 0 && holder[1].length() <= 2)) {
-                valid = false;
-            }
-            if (holder[2].length() != 4) {
-                valid = false;
-            }
         }
 
-        return valid;
-    }
+        if (valid) {
+            int slashCount = 0;
+            for (int i = 0; i < date.length(); i++) {
+                char temp = date.charAt(i);
+                if (!Character.isDigit(temp) && temp != '/') {
+                    valid = false;
+                    break;
+                } else if (temp == '/') {
+                    slashCount++;
+                }
 
-    private boolean verifyDCharacters(String duration) {
-        boolean valid = true;
-
-        return valid;
-    }
-
-    private void setComponents() {
-
-        mainPanel = new JPanel();
-        title = new JLabel();
-        durationInput = new JTextField();
-        durationLabel = new JLabel();
-        bDateFormatLabel = new JLabel();
-        durationFormatLabel = new JLabel();
-        bDateInput = new JTextField();
-        bDateLabel = new JLabel();
-        book = new JButton();
-        homeButton = new JButton();
-        back = new JButton();
-        bDateErrorMsg = new JLabel();
-        lDateErrorMsg = new JLabel();
-
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Make Booking Menu");
-        setResizable(false);
-
-        title.setFont(new Font("Segoe UI", 0, 24)); // NOI18N
-        title.setHorizontalAlignment(SwingConstants.CENTER);
-        title.setText("Booking Details");
-
-        durationInput.setFont(new Font("Segoe UI", 0, 17)); // NOI18N
-        durationInput.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (datePicker.isVisible()) {
-                    datePicker.setVisible(false);
+                if (slashCount > 2) {
+                    valid = false;
+                    break;
                 }
             }
-        });
 
-        durationLabel.setFont(new Font("Segoe UI", 0, 18));
-        durationLabel.setHorizontalAlignment(SwingConstants.TRAILING);
-        durationLabel.setText("Duration of stay:");
-
-        bDateFormatLabel.setFont(new Font("Segoe UI", 2, 15));
-        bDateFormatLabel.setText("DD/MM/YYYY");
-        bDateFormatLabel.setPreferredSize(new Dimension(90, 20));
-
-        durationFormatLabel.setFont(new Font("Segoe UI", 2, 15));
-        durationFormatLabel.setText("Number of days (Max: 100)");
-
-        bDateInput.setFont(new Font("Segoe UI", 0, 17));
-        bDateInput.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                int x = bDateInput.getLocationOnScreen().x + bDateInput.getWidth();
-                int y = bDateInput.getLocationOnScreen().y;
-                datePicker.setLocation(x, y);
-                datePicker.setVisible(true);
+            if (valid && slashCount != 2) {
+                valid = false;
+            } else if (valid && slashCount == 2) {
+                String[] holder = date.split("/");
+                if (holder.length != 3) {
+                    valid = false;
+                }
+                if (!(holder[0].length() > 0 && holder[0].length() <= 2)) {
+                    valid = false;
+                }
+                if (!(holder[1].length() > 0 && holder[1].length() <= 2)) {
+                    valid = false;
+                }
+                if (holder[2].length() != 4) {
+                    valid = false;
+                }
             }
-        });
+        }
 
-        bDateLabel.setFont(new Font("Segoe UI", 0, 18));
-        bDateLabel.setHorizontalAlignment(SwingConstants.TRAILING);
-        bDateLabel.setText("Booking Date:");
+        return valid;
+    }
 
-        book.setFont(new Font("Segoe UI", 0, 18));
-        book.setText("Book Room");
-        book.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                bookActionPerformed(e);
-            }
-        });
-
-        homeButton.setText("Homepage");
-        homeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                homeButtonActionPerformed(e);
-            }
-        });
-
-        back.setText("Back");
-        back.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                backActionPerformed(e);
-            }
-        });
-
-        homeButton.setBounds(10, 10, 100, 30);
-        back.setBounds(10, 50, 100, 30);
-        title.setBounds(265, 40, 270, 50);
-        bDateLabel.setBounds(30, 143, 200, 20);
-        bDateInput.setBounds(240, 140, 290, 30);
-        bDateFormatLabel.setBounds(245, 170, 120, 20);
-        durationLabel.setBounds(30, 230, 200, 20);
-        durationInput.setBounds(240, 228, 290, 30);
-        durationFormatLabel.setBounds(245, 260, 200, 20);
-        book.setBounds(335, 320, 140, 40);
-        bDateErrorMsg.setBounds(540, 140, 250, 32);
-        lDateErrorMsg.setBounds(540, 180, 250, 32);
-
+    private void setMainPanel() {
+        mainPanel.setPreferredSize(new Dimension(width, height));
         mainPanel.setLayout(null);
+
         mainPanel.add(homeButton);
-        mainPanel.add(back);
+        mainPanel.add(backButton);
         mainPanel.add(title);
         mainPanel.add(durationLabel);
         mainPanel.add(durationInput);
@@ -364,61 +507,26 @@ public class BookingDetails extends JFrame {
         mainPanel.add(book);
         mainPanel.add(bDateErrorMsg);
         mainPanel.add(lDateErrorMsg);
+    }
 
-        mainPanel.setPreferredSize(new Dimension(800, 400));
-
+    private void setFrame() {
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        setBackground(Color.WHITE);
+        setLocation(((homepage.screenWidth / 2) - (width / 2)), ((homepage.screenHeight / 2) - (height / 2)));
+        setResizable(false);
         getContentPane().add(mainPanel);
-
         pack();
-    }
 
-    private void homeButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        roomTypes.booking.dispose();
-        roomTypes.dispose();
-        if (roomTypes.roomDetails.isVisible()) {
-            roomTypes.roomDetails.dispose();
-        }
-        if (datePicker.isVisible()) {
-            datePicker.dispose();
-        }
-        homepage.setLocation((homepage.width / 2) - (homepage.getWidth() / 2), 200);
-        homepage.setVisible(true);
-        dispose();
-    }
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                homepage.dbManager.closeConnections();
 
-    private void backActionPerformed(java.awt.event.ActionEvent evt) {
-        roomTypes.setLocation((homepage.width / 2) - (roomTypes.getWidth() / 2), 200);
-        roomTypes.roomDetails.setLocation(roomTypes.getX() + 8, (roomTypes.getY() + roomTypes.getHeight() - 2));
-        roomTypes.setVisible(true);
-        roomTypes.roomDetails.setVisible(true);
-        dispose();
-    }
-
-    private void bookActionPerformed(java.awt.event.ActionEvent evt) {
-        if (!bDateInput.getText().isEmpty()) {
-            verifyBookDate();
-        } else {
-            setBDateErrMsg();
-        }
-
-        if (!durationInput.getText().isEmpty()) {
-            verifyLeaveDate();
-        } else {
-            setLDateErrMsg();
-        }
-
-        if (validBDate && validLDate) {
-            if (!bDateErrorMsg.getText().isEmpty()) {
-                bDateErrorMsg.setText("");
+                dispose();
+                System.exit(0);
             }
-            if (!lDateErrorMsg.getText().isEmpty()) {
-                lDateErrorMsg.setText("");
-            }
+        });
 
-//            discounts = new DiscountMenu(this.homepage);
-//            discounts.setVisible(true);
-//            datePicker.dispose();
-//            dispose();
-        }
+        setVisible(true);
     }
 }
