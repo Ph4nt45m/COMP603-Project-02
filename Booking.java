@@ -4,104 +4,77 @@
  */
 package Project_02;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
+import javax.swing.SwingConstants;
 
 /**
  *
  * @author snipi
  */
-public class Booking extends JFrame {
+public class BookingMenu extends JFrame {
 
-    Homepage homepage;
-    RoomTypes roomTypesMenu;
+    private JButton homeButton;
+    private JLabel bookingTitle;
+    private JButton makeBookingButton;
+    private JButton checkBookingButton;
+    private JPanel buttonPanel;
+    private JPanel mainPanel;
 
-    public Booking(Homepage home) {
+    protected final int width = 240;
+    protected final int height = 300;
+    protected Homepage homepage;
+    protected RoomTypes roomTypesMenu;
+
+    public BookingMenu(Homepage home) {
         this.homepage = home;
         setComponents();
-        setLocation((homepage.width / 2) - (this.getWidth() / 2), 200);
-
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                homepage.dbManager.closeConnections();
-                dispose();
-                System.exit(0);
-            }
-        });
     }
 
     private void setComponents() {
-        JPanel mainPanel = new JPanel();
-        JLabel bookingTitle = new JLabel();
-        JPanel buttonPanel = new JPanel();
-        JButton makeBooking = new JButton();
-        JButton checkBooking = new JButton();
-        JButton returnHomepage = new JButton();
+        bookingTitle = new JLabel();
+        makeBookingButton = new JButton();
+        checkBookingButton = new JButton();
+        homeButton = new JButton();
+        buttonPanel = new JPanel();
+        mainPanel = new JPanel();
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBackground(Color.WHITE);
-        setPreferredSize(new Dimension(250, 310));
-        Border border = BorderFactory.createEmptyBorder(15, 25, 15, 25);
-        mainPanel.setBorder(border);
-        setResizable(false);
-        
-        mainPanel.setLayout(null);
+        setTitle();
+        setMakeBookingButton();
+        setCheckBookingButton();
+        setHomeButton();
+        setButtonPanel();
+        setMainPanel();
+        setFrame();
+    }
 
-        bookingTitle.setFont(new java.awt.Font("Segoe UI", 0, 24));
-        bookingTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+    private void setTitle() {
+        bookingTitle.setFont(new Font("Segoe UI", 0, 24));
+        bookingTitle.setHorizontalAlignment(SwingConstants.CENTER);
         bookingTitle.setText("Booking Menu");
-        bookingTitle.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        bookingTitle.setBounds(25, 25, 200, 35);
+        bookingTitle.setBounds(25, 20, 200, 60);
+    }
 
-        buttonPanel.setPreferredSize(new Dimension(200, 220));
-        buttonPanel.setBounds(25, 90, 200, 170);
-
-        makeBooking.setText("Make a Booking");
-        makeBooking.setPreferredSize(new Dimension(200, 45));
-        makeBooking.addActionListener(new ActionListener() {
+    private void setMakeBookingButton() {
+        makeBookingButton.setFont(new Font("Segoe UI", 0, 16));
+        makeBookingButton.setText("Make a Booking");
+        makeBookingButton.setBounds(0,0,200,45);
+        
+        makeBookingButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 makeBookingActionPerformed(evt);
             }
         });
-
-        checkBooking.setText("Check my Booking");
-        checkBooking.setPreferredSize(new Dimension(200, 45));
-        checkBooking.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                checkBookingActionPerformed(evt);
-            }
-        });
-
-        returnHomepage.setText("Return to Homepage");
-        returnHomepage.setPreferredSize(new Dimension(200, 45));
-        returnHomepage.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                returnHomepageActionPerformed(evt);
-            }
-        });
-
-        buttonPanel.add(makeBooking);
-        buttonPanel.add(checkBooking);
-        buttonPanel.add(returnHomepage);
-
-        mainPanel.add(bookingTitle, BorderLayout.NORTH);
-        mainPanel.add(buttonPanel, BorderLayout.CENTER);
-
-        getContentPane().add(mainPanel);
-
-        pack();
     }
 
     private void makeBookingActionPerformed(ActionEvent evt) {
@@ -109,13 +82,79 @@ public class Booking extends JFrame {
         setVisible(false);
     }
 
+    private void setCheckBookingButton() {
+        checkBookingButton.setFont(new Font("Segoe UI", 0, 16));
+        checkBookingButton.setText("Check my Booking");
+        checkBookingButton.setBounds(0,65,200,45);
+        
+        checkBookingButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                checkBookingActionPerformed(evt);
+            }
+        });
+    }
+
     private void checkBookingActionPerformed(ActionEvent evt) {
         
     }
 
-    private void returnHomepageActionPerformed(ActionEvent evt) {
+    private void setHomeButton() {
+        homeButton.setFont(new Font("Segoe UI", 0, 16));
+        homeButton.setText("Return to Homepage");
+        homeButton.setBounds(0,130,200,45);
+        
+        homeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                homeButtonAction(e);
+            }
+        });
+    }
+
+    private void homeButtonAction(ActionEvent evt) {
         homepage.setVisible(true);
-        homepage.setLocationRelativeTo(null);
-        dispose();
+        homepage.setLocation((homepage.screenWidth / 2) - (homepage.width / 2), ((homepage.screenHeight / 2) - (homepage.height / 2)));
+        if (isDisplayable()) {
+            dispose();
+        }
+    }
+
+    private void setButtonPanel() {
+        buttonPanel.setBounds(25,100,200,180);
+        buttonPanel.setLayout(null);
+
+        buttonPanel.add(makeBookingButton);
+        buttonPanel.add(checkBookingButton);
+        buttonPanel.add(homeButton);
+    }
+
+    private void setMainPanel() {
+        mainPanel.setPreferredSize(new Dimension(width, height));
+        mainPanel.setLayout(null);
+
+        mainPanel.add(bookingTitle);
+        mainPanel.add(buttonPanel);
+    }
+
+    private void setFrame() {
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        setBackground(Color.WHITE);
+        setLocation(((homepage.screenWidth / 2) - (width / 2)), ((homepage.screenHeight / 2) - (height / 2)));
+        setResizable(false);
+        getContentPane().add(mainPanel);
+        pack();
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                homepage.dbManager.closeConnections();
+                dispose();
+
+                System.exit(0);
+            }
+        });
+        
+        setVisible(true);
     }
 }
