@@ -11,8 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.LocalDate;
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,42 +28,54 @@ import javax.swing.WindowConstants;
  */
 public class DiscountMenu extends JFrame {
 
-    JPanel mainPanel;
-    JLabel discountTitle;
-    JButton homeButton;
-    JButton backButton;
-    JLabel studentDOBLabel;
-    JRadioButton studentDiscount;
-    JTextField studentInput;
-    JLabel sDOBFormatLabel;
-    JLabel studentErrorMsg;
-    JLabel childDOBLabel;
-    JRadioButton childDiscount;
-    JTextField childInput;
-    JLabel cDOBFormatLabel;
-    JLabel childErrorMsg;
-    JButton applyButton;
-    JButton skipButton;
-    ButtonGroup selection;
-    JRadioButton selectedDiscount;
+    private JLabel discountTitle;
+    private JButton homeButton;
+    private JButton backButton;
+    private JLabel studentDOBLabel;
+    private JRadioButton studentDiscount;
+    private JTextField studentInput;
+    private JLabel sDOBFormatLabel;
+    private JLabel studentErrorMsg;
+    private JLabel childDOBLabel;
+    private JRadioButton childDiscount;
+    private JTextField childInput;
+    private JLabel cDOBFormatLabel;
+    private JLabel childErrorMsg;
+    private JButton applyButton;
+    private JButton skipButton;
+    private ButtonGroup selection;
+    private JPanel mainPanel;
 
-    Homepage homepage;
-    BookingDetails bookDetails;
-    private boolean validInput;
-    
+    protected final int width = 700;
+    protected final int height = 460;
+    protected Homepage homepage;
+    protected BookingDetails bookDetails;
+    protected PaymentMenu paymentDetails;
+    protected LocalDate currentDate;
+    protected boolean studentDisStatus;
+    protected boolean childDisStatus;
+    protected boolean validStudentInput;
+    protected boolean validChildInput;
+
     public DiscountMenu() {
+        this.studentDisStatus = false;
+        this.childDisStatus = false;
+        this.validStudentInput = false;
+        this.validChildInput = false;
         setComponents();
     }
 
     public DiscountMenu(Homepage home, BookingDetails bookingDetails) {
         this.homepage = home;
         this.bookDetails = bookingDetails;
-        this.validInput = true;
+        this.studentDisStatus = false;
+        this.childDisStatus = false;
+        this.validStudentInput = false;
+        this.validChildInput = false;
         setComponents();
     }
 
     private void setComponents() {
-        mainPanel = new JPanel();
         discountTitle = new JLabel();
         homeButton = new JButton();
         backButton = new JButton();
@@ -80,6 +92,7 @@ public class DiscountMenu extends JFrame {
         selection = new ButtonGroup();
         applyButton = new JButton();
         skipButton = new JButton();
+        mainPanel = new JPanel();
 
         setTitle();
         setHomeButton();
@@ -100,34 +113,17 @@ public class DiscountMenu extends JFrame {
         setFrame();
     }
 
-    private void setFrame() {
-        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        setBackground(Color.WHITE);
-        setPreferredSize(new Dimension(780, 460));
-        setLocation((homepage.width / 2) - (this.getWidth() / 2), ((homepage.height / 2) - (this.getHeight() / 2)));
-        setResizable(false);
-
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                homepage.dbManager.closeConnections();
-
-                dispose();
-                System.exit(0);
-            }
-        });
-    }
-
     private void setTitle() {
         discountTitle.setFont(new Font("Segoe UI", 0, 24));
         discountTitle.setHorizontalAlignment(SwingConstants.CENTER);
         discountTitle.setText("Discounts");
-        discountTitle.setBounds(250, 50, 200, 50);
+        discountTitle.setBounds(((width / 2) - (200 / 2)), 50, 200, 50);
     }
 
     private void setHomeButton() {
         homeButton.setText("Homepage");
         homeButton.setBounds(10, 10, 100, 30);
+
         homeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -150,7 +146,7 @@ public class DiscountMenu extends JFrame {
             bookDetails.roomTypes.booking.dispose();
         }
 
-        homepage.setLocation((homepage.width / 2) - (homepage.getWidth() / 2), ((homepage.height / 2) - (homepage.getHeight())));
+        homepage.setLocation((homepage.screenWidth / 2) - (homepage.width / 2), ((homepage.screenHeight / 2) - (homepage.height / 2)));
         homepage.setVisible(true);
         if (isDisplayable()) {
             dispose();
@@ -160,17 +156,23 @@ public class DiscountMenu extends JFrame {
     private void setBackButton() {
         backButton.setText("Back");
         backButton.setBounds(10, 50, 100, 30);
+
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 backButtonAction(e);
             }
-
         });
     }
 
     private void backButtonAction(ActionEvent evt) {
-        bookDetails.setLocation(((homepage.width / 2) - (bookDetails.getWidth() / 2)), ((homepage.height / 2) - (bookDetails.getHeight() / 2)));
+        bookDetails.bDateInput.setText(bookDetails.datePicker.currentDate);
+        bookDetails.durationInput.setText("");
+        bookDetails.dateBooked = null;
+        bookDetails.dateLeave = null;
+        bookDetails.validBDate = false;
+        bookDetails.validLDate = false;
+        bookDetails.setLocation(((homepage.screenWidth / 2) - (bookDetails.width / 2)), ((homepage.screenHeight / 2) - (bookDetails.height / 2)));
         bookDetails.setVisible(true);
         if (isDisplayable()) {
             dispose();
@@ -228,12 +230,13 @@ public class DiscountMenu extends JFrame {
 
     private void setChildErrMsg() {
         childErrorMsg.setForeground(Color.red);
-        childErrorMsg.setBounds(450, 290, 100, 30);
+        childErrorMsg.setBounds(450, 290, 250, 30);
     }
 
     private void setApplyButton() {
         applyButton.setText("Apply");
-        applyButton.setBounds(240, 390, 90, 40);
+        applyButton.setBounds(((width / 2) - (90 + 20)), (height - (40 + 30)), 90, 40);
+
         applyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -243,30 +246,56 @@ public class DiscountMenu extends JFrame {
     }
 
     private void applyButtonAction(ActionEvent evt) {
-        if (selection.getSelection() != null) {
-            if (selection.getSelection() == studentDiscount.getModel()) {
-                if (bookDetails.verifyCharacters(studentInput.getText().trim())) {
-                    if (!checkStudent()) {
-                        
-                    } else {
-                        
-                    }
-                } else {
-                    validInput = false;
-                    setStudentErrorMsg();
-                }
+        applyDiscount();
+        if (validStudentInput || validChildInput) {
+            if (!studentErrorMsg.getText().isEmpty()) {
+                studentErrorMsg.setText("");
+            }
+            if (!childErrorMsg.getText().isEmpty()) {
+                childErrorMsg.setText("");
             }
 
-            if (selection.getSelection() == childDiscount.getModel()) {
-                if (bookDetails.verifyCharacters(childInput.getText().trim())) {
-                    if (!checkChild()) {
-                        
-                    } else {
-                        
+            paymentDetails = new PaymentMenu(homepage, this);
+            setVisible(false);
+        } else {
+            studentInput.setText("");
+            childInput.setText("");
+        }
+    }
+
+    private void applyDiscount() {
+        if (selection.getSelection() != null) {
+            if (selection.getSelection() == studentDiscount.getModel()) {
+                if (!childErrorMsg.getText().isEmpty()) {
+                    childErrorMsg.setText("");
+                }
+                if (studentInput.getText().isEmpty()) {
+                    studentErrorMsg.setText("* Text field required");
+                } else if (bookDetails.verifyCharacters(studentInput.getText())) {
+                    if (checkStudent()) {
+                        studentDisStatus = true;
+                        if (!studentErrorMsg.getText().isEmpty()) {
+                            studentErrorMsg.setText("");
+                        }
                     }
                 } else {
-                    validInput = false;
-                    setChildErrorMsg();
+                    setStudentErrorMsg("* Invalid input");
+                }
+            } else if (selection.getSelection() == childDiscount.getModel()) {
+                if (!studentErrorMsg.getText().isEmpty()) {
+                    studentErrorMsg.setText("");
+                }
+                if (childInput.getText().isEmpty()) {
+                    childErrorMsg.setText("* Text field required");
+                } else if (bookDetails.verifyCharacters(childInput.getText())) {
+                    if (checkChild()) {
+                        childDisStatus = true;
+                        if (!childErrorMsg.getText().isEmpty()) {
+                            childErrorMsg.setText("");
+                        }
+                    }
+                } else {
+                    setChildErrorMsg("* Invalid input");
                 }
             }
         } else {
@@ -275,16 +304,77 @@ public class DiscountMenu extends JFrame {
     }
 
     private boolean checkStudent() {
-        boolean valid = true;
-        String[] holder = studentInput.getText().trim().split("/");
+        currentDate = LocalDate.now();
+        String[] holder = studentInput.getText().split("/");
+        int day = Integer.parseInt(holder[0]);
+        int month = Integer.parseInt(holder[1]);
+        int year = Integer.parseInt(holder[2]);
+        if ((year >= currentDate.getYear()) || (year < currentDate.getYear() - 100)) {
+            setStudentErrorMsg("* Invalid date");
+            return validStudentInput;
+        }
+        if (currentDate.getYear() - year < 10) {
+            validStudentInput = true;
+        } else if (!(month > 0 && month <= 12)) {
+            setStudentErrorMsg("* Invalid input");
+            return validStudentInput;
+        }
+        if (!studentDisStatus && !validStudentInput) {
+            int monthDayLimit = bookDetails.setDayLimit(month, year);
+            if (!(day > 0 && day <= monthDayLimit)) {
+                setStudentErrorMsg("* Invalid input");
+                return validStudentInput;
+            } else {
+                studentDisStatus = true;
+                validStudentInput = true;
+            }
+        }
 
-        return valid;
+        return validStudentInput;
     }
 
     private boolean checkChild() {
-        boolean valid = true;
+        currentDate = LocalDate.now();
+        String[] holder = childInput.getText().split("/");
+        int day = Integer.parseInt(holder[0]);
+        int month = Integer.parseInt(holder[1]);
+        int year = Integer.parseInt(holder[2]);
+        if (year > currentDate.getYear()) {
+            setChildErrorMsg("* Invalid input");
+            return validChildInput;
+        }
+        if (currentDate.getYear() - year > 10) {
+            validChildInput = true;
+        } else if (!(month > 0 && month <= 12)) {
+            setChildErrorMsg("* Invalid input");
+            return validChildInput;
+        }
+        if (!childDisStatus && !validChildInput) {
+            if (day <= 0) {
+                setChildErrorMsg("* Invalid input");
+                return validChildInput;
+            }
+            if (year == currentDate.getYear() && month == currentDate.getMonthValue()) {
+                if (day >= currentDate.getDayOfMonth()) {
+                    setChildErrorMsg("* Invalid input");
+                    return validChildInput;
+                } else {
+                    childDisStatus = true;
+                    validChildInput = true;
+                }
+            } else {
+                int monthDayLimit = bookDetails.setDayLimit(month, year);
+                if (!(day > 0 && day <= monthDayLimit)) {
+                    setChildErrorMsg("* Invalid input");
+                    return validChildInput;
+                } else {
+                    childDisStatus = true;
+                    validChildInput = true;
+                }
+            }
+        }
 
-        return valid;
+        return validChildInput;
     }
 
     private void setSelectionErrorMsg() {
@@ -298,19 +388,24 @@ public class DiscountMenu extends JFrame {
         childErrorMsg.setText("*Please select a discount");
     }
 
-    private void setStudentErrorMsg() {
-        if (!validInput) {
-            studentErrorMsg.setText("* Invalid input");
+    private void setStudentErrorMsg(String message) {
+        if (!studentErrorMsg.getText().isEmpty()) {
+            studentErrorMsg.setText("");
         }
+        studentErrorMsg.setText(message);
     }
 
-    private void setChildErrorMsg() {
-        
+    private void setChildErrorMsg(String message) {
+        if (!childErrorMsg.getText().isEmpty()) {
+            childErrorMsg.setText("");
+        }
+        childErrorMsg.setText(message);
     }
 
     private void setSkipButton() {
         skipButton.setText("Skip");
-        skipButton.setBounds(370, 390, 90, 40);
+        skipButton.setBounds(((width / 2) + 20), (height - (40 + 30)), 90, 40);
+        
         skipButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -320,11 +415,25 @@ public class DiscountMenu extends JFrame {
     }
 
     private void skipButtonAction(ActionEvent evt) {
+        if (!studentInput.getText().isEmpty()) {
+            studentInput.setText("");
+        }
+        if (!childInput.getText().isEmpty()) {
+            studentInput.setText("");
+        }
+        if (!studentErrorMsg.getText().isEmpty()) {
+            studentErrorMsg.setText("");
+        }
+        if (!childErrorMsg.getText().isEmpty()) {
+            childErrorMsg.setText("");
+        }
 
+        paymentDetails = new PaymentMenu(homepage, this);
+        setVisible(false);
     }
 
     private void setMainPanel() {
-        mainPanel.setPreferredSize(new Dimension(700, 460));
+        mainPanel.setPreferredSize(new Dimension(width, height));
         mainPanel.setLayout(null);
 
         mainPanel.add(discountTitle);
@@ -349,5 +458,23 @@ public class DiscountMenu extends JFrame {
 
         getContentPane().add(mainPanel);
         pack();
+    }
+
+    private void setFrame() {
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        setBackground(Color.WHITE);
+        setLocation((homepage.screenWidth / 2) - (width / 2), ((homepage.screenHeight / 2) - (height / 2)));
+        setResizable(false);
+        setVisible(true);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                homepage.dbManager.closeConnections();
+
+                dispose();
+                System.exit(0);
+            }
+        });
     }
 }
