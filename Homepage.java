@@ -17,145 +17,196 @@ import java.awt.event.WindowEvent;
  */
 public class Homepage extends JFrame {
 
-    protected DBManager dbManager;
-    protected Booking bookingMenu;
-    protected Facilities facilities;
-    protected Vouchers vouchers;
-    protected Contacts contacts;
+    private JLabel title;
+    private JButton bookingButton;
+    private JButton facilitiesButton;
+    private JButton faqsButton;
+    private JButton vouchersButton;
+    private JButton contactsButton;
+    private JPanel buttonPanel;
+    private JPanel mainPanel;
 
-    Toolkit toolKit;
-    Dimension screenDim;
-    int width;
+    protected final int screenWidth;
+    protected final int screenHeight;
+    protected final int width = 800;
+    protected final int height = 600;
+    protected DBManager dbManager;
+    protected BookingMenu bookingMenu;
+    protected Facilites facilities;
+    protected Vouchers voucherMenu;
+    protected Contacts contacts;
+    private final Toolkit toolKit;
+    private final Dimension screenDim;
 
     public Homepage() {
-        dbManager = new DBManager();
-        dbManager.establishConnection();
-        toolKit = Toolkit.getDefaultToolkit();
-        screenDim = toolKit.getScreenSize();
-        width = screenDim.width;
+        this.dbManager = new DBManager();
+        this.dbManager.establishConnection();
+        this.toolKit = Toolkit.getDefaultToolkit();
+        this.screenDim = toolKit.getScreenSize();
+        this.screenWidth = screenDim.width;
+        this.screenHeight = screenDim.height;
         setComponents();
-        setLocation((width / 2) - (this.getWidth() / 2), 200);
-
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                dbManager.closeConnections();
-
-                dispose();
-                System.exit(0);
-            }
-        });
     }
 
     private void setComponents() {
-        JPanel mainPanel = new JPanel();
-        JPanel buttonPanel = new JPanel();
-        JButton booking = new JButton("Booking");
-        JButton facilities = new JButton("Facilities");
-        JButton faqs = new JButton("FAQ");
-        JButton vouchers = new JButton("Vouchers");
-        JButton contact = new JButton("Contact");
-        JLabel title = new JLabel();
+        title = new JLabel();
+        bookingButton = new JButton();
+        facilitiesButton = new JButton();
+        faqsButton = new JButton();
+        vouchersButton = new JButton();
+        contactsButton = new JButton();
+        buttonPanel = new JPanel();
+        mainPanel = new JPanel();
 
-        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Welcome to Marl Avenue Hotel");
-        setBackground(Color.WHITE);
-        setPreferredSize(new Dimension(800, 600));
-        setResizable(false);
+        setTitle();
+        setBookingButton();
+        setFacilitiesButton();
+        setFAQsButton();
+        setVouchersButton();
+        setContactsButton();
+        setButtonPanel();
+        setMainPanel();
+        setFrame();
+    }
 
-        mainPanel.setLayout(null);
+    private void setTitle() {
+        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        title.setText("Welcome to Marl Avenue Hotel");
+        title.setBounds(30, 0, 600, 200);
+    }
 
-        buttonPanel.setPreferredSize(new Dimension(200, 270));
-        buttonPanel.setLayout(new GridLayout(5, 1, 10, 10));
-        buttonPanel.setBounds(20, 220, 200, 290);
-
-        booking.setPreferredSize(new Dimension(200, 45));
-        booking.addActionListener(new ActionListener() {
+    private void setBookingButton() {
+        bookingButton.setFont(new Font("Segoe UI", 0, 16));
+        bookingButton.setText("Booking");
+        bookingButton.setPreferredSize(new Dimension(200, 45));
+        
+        bookingButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 bookingButton(e);
             }
         });
+    }
 
-        facilities.setPreferredSize(new Dimension(200, 45));
-        facilities.addActionListener(new ActionListener() {
+    private void bookingButton(ActionEvent evt) {
+        bookingMenu = new BookingMenu(this);
+        setVisible(false);
+    }
+
+    private void setFacilitiesButton() {
+        facilitiesButton.setFont(new Font("Segoe UI", 0, 16));
+        facilitiesButton.setText("Facilities");
+        facilitiesButton.setPreferredSize(new Dimension(200, 45));
+        
+        facilitiesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 facilitiesButton(e);
             }
         });
-
-        faqs.setPreferredSize(new Dimension(200, 45));
-        faqs.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                faqButton(e);
-            }
-        });
-
-        vouchers.setPreferredSize(new Dimension(200, 45));
-        vouchers.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                vouchersButton(e);
-            }
-        });
-
-        contact.setPreferredSize(new Dimension(200, 45));
-        contact.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                contactButton(e);
-            }
-        });
-
-        buttonPanel.add(booking);
-        buttonPanel.add(facilities);
-        buttonPanel.add(faqs);
-        buttonPanel.add(vouchers);
-        buttonPanel.add(contact);
-
-        title.setFont(new Font("Arial", Font.BOLD, 24));
-        title.setText("Welcome to Marl Avenue Hotel");
-        title.setBounds(30, 0, 600, 200);
-
-        mainPanel.add(title, BorderLayout.NORTH);
-        mainPanel.add(buttonPanel, BorderLayout.CENTER);
-
-        getContentPane().add(mainPanel);
-
-        pack();
     }
 
-    private void bookingButton(ActionEvent event) {
-        setVisible(false);
-        bookingMenu = new Booking(this);
-        bookingMenu.setLocationRelativeTo(null);
-        bookingMenu.setVisible(true);
-    }
-
-    private void facilitiesButton(ActionEvent event) {
+    private void facilitiesButton(ActionEvent evt) {
         setVisible(false);
         facilities = new Facilities(this);
         facilities.setLocationRelativeTo(null);
         facilities.setVisible(true);
     }
 
-    private void faqButton(ActionEvent event) {
+    private void setFAQsButton() {
+        faqsButton.setFont(new Font("Segoe UI", 0, 16));
+        faqsButton.setText("Facilities");
+        faqsButton.setPreferredSize(new Dimension(200, 45));
+        
+        faqsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                faqsButton(e);
+            }
+        });
+    }
+
+    private void faqsButton(ActionEvent evt) {
 
     }
 
-    private void vouchersButton(ActionEvent event) {
+    private void setVouchersButton() {
+        vouchersButton.setFont(new Font("Segoe UI", 0, 16));
+        vouchersButton.setText("Facilities");
+        vouchersButton.setPreferredSize(new Dimension(200, 45));
+        
+        vouchersButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vouchersButton(e);
+            }
+        });
+    }
+
+    private void vouchersButton(ActionEvent evt) {
+        voucherMenu = new Vouchers(this);
+        voucherMenu.setVisible(true);
         setVisible(false);
-        vouchers = new Vouchers(this);
-        vouchers.setLocationRelativeTo(null);
-        vouchers.setVisible(true);
     }
 
-    private void contactButton(ActionEvent event) {
+    private void setContactsButton() {
+        contactsButton.setFont(new Font("Segoe UI", 0, 16));
+        contactsButton.setText("Facilities");
+        contactsButton.setPreferredSize(new Dimension(200, 45));
+        
+        contactsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                contactButton(e);
+            }
+        });
+    }
+
+    private void contactButton(ActionEvent evt) {
         setVisible(false);
         contacts = new Contacts(this);
         contacts.setLocationRelativeTo(null);
         contacts.setVisible(true);
+    }
+
+    private void setButtonPanel() {
+        buttonPanel.setLayout(new GridLayout(5, 1, 10, 10));
+        buttonPanel.setBounds(20, 220, 200, 290);
+
+        buttonPanel.add(bookingButton);
+        buttonPanel.add(facilitiesButton);
+        buttonPanel.add(faqsButton);
+        buttonPanel.add(vouchersButton);
+        buttonPanel.add(contactsButton);
+    }
+
+    private void setMainPanel() {
+        mainPanel.setPreferredSize(new Dimension(width, height));
+        mainPanel.setLayout(null);
+
+        mainPanel.add(title);
+        mainPanel.add(buttonPanel);
+    }
+    
+    private void setFrame() {
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Marl Avenue Hotel");
+        setBackground(Color.WHITE);
+        setLocation(((screenWidth / 2) - (width / 2)), ((screenHeight / 2) - (height / 2)));
+        setResizable(false);
+        getContentPane().add(mainPanel);
+        pack();
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                dbManager.closeConnections();
+                dispose();
+
+                System.exit(0);
+            }
+        });
+        
+        setVisible(true);
     }
 }
