@@ -41,7 +41,6 @@ public class RoomTypes extends JFrame {
     protected RoomDetails roomDetails;
     protected BookingDetails bookingDetails;
     protected String selectedRoom;
-    protected Room room;
 
     public RoomTypes(Homepage home, BookingMenu bookingMenu) {
         this.homepage = home;
@@ -173,24 +172,11 @@ public class RoomTypes extends JFrame {
     }
 
     private void selectRoomAction(ActionEvent evt) {
-        makeRoom();
         bookingDetails = new BookingDetails(homepage, this);
         setVisible(false);
         roomDetails.setVisible(false);
     }
     
-    private void makeRoom() {
-        if (selectedRoom.contains("Single")) {
-            room = new SingleRoom();
-        } else if (selectedRoom.contains("Double")) {
-            room = new DoubleRoom();
-        } else if (selectedRoom.contains("Family")) {
-            room = new FamilyRoom();
-        } else if (selectedRoom.contains("Group")) {
-            room = new GroupRoom();
-        }
-    }
-
     private void setMainPanel() {
         mainPanel.setPreferredSize(new Dimension(width, height));
         mainPanel.setLayout(null);
