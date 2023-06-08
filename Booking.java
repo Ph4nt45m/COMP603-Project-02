@@ -16,9 +16,8 @@ public class Booking {
     protected Room roomType;
     protected String phoneNumber;
     protected String email;
-    private String addBookingSQLValue;
     
     public Booking() {
-        this.addBookingSQLValue = "";
+        
     }
 }
