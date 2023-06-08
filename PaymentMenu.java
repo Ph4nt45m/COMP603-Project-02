@@ -399,7 +399,7 @@ public class PaymentMenu extends JFrame {
             makeRoom();
             booking.roomType = room;
             booking.roomType.setIsStudent(discounts.studentDisStatus);
-//            booking.roomType.setHasChildren(discounts.childDisStatus);
+            booking.roomType.setHasChildren(discounts.childDisStatus);
             booking.phoneNumber = phoneNumber;
             booking.email = email;
             homepage.dbManager.addToBookingList(booking);
@@ -554,11 +554,17 @@ public class PaymentMenu extends JFrame {
         }
 
         if (isDigit) {
-            String[] check = phoneInput.getText().split(" ");
-            if (check[0].length() != 3 || check[1].length() != 4) {
-                return false;
+            if (holder.contains(" ")) {
+                String[] check = phoneInput.getText().split(" ");
+
+                if (check[0].length() != 3 || check[1].length() != 4) {
+                    return false;
+                } else {
+                    phoneNumber = "09" + phoneInput.getText();
+                }
             } else {
-                phoneNumber = "09 " + phoneInput.getText();
+                phoneNumber = "09 " + phoneInput.getText().substring(0, 3) +
+                        " " + phoneInput.getText().substring(3);
             }
         } else {
             return false;
@@ -828,7 +834,6 @@ public class PaymentMenu extends JFrame {
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setBackground(Color.WHITE);
         setLocation(((homepage.screenWidth / 2) - (width / 2)), ((homepage.screenHeight / 2) - (height / 2)));
-//        setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);
 
@@ -842,7 +847,7 @@ public class PaymentMenu extends JFrame {
             }
         });
     }
-    
+
     private void disposeVoucherCurrent() {
         vouchers.voucherDetails.dispose();
         vouchers.dispose();
