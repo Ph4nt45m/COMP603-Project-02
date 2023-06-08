@@ -6,11 +6,20 @@ package Project_02;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
- * @author snipi
+ * @author m4ria
  */
 public final class DBManager {
 
@@ -218,6 +227,7 @@ public void getQuestionsAndAnswers() {
             double thirdCompatibility = (((double) compareQ.length + (double) holder.length)) * 0.15;
             if (percentage >= thirdCompatibility) {
                 similarQ.put(entry.getKey(), entry.getValue());
+                count = 0;
             }
         }
         

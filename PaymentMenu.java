@@ -20,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -27,7 +28,7 @@ import javax.swing.WindowConstants;
 
 /**
  *
- * @author snipi
+ * @author m4ria
  */
 public class PaymentMenu extends JFrame {
 
@@ -68,6 +69,7 @@ public class PaymentMenu extends JFrame {
     protected LocalDate currentDate;
     protected Homepage homepage;
     protected DiscountMenu discounts;
+    protected Vouchers vouchers;
     protected String firstName;
     protected String surname;
     protected String phoneNumber;
@@ -81,7 +83,9 @@ public class PaymentMenu extends JFrame {
     private Booking booking;
     private Room room;
 
-    public PaymentMenu() {
+    public PaymentMenu(Homepage home, Vouchers vouchers) {
+        this.homepage = home;
+        this.vouchers = vouchers;
         setComponents();
     }
 
@@ -385,7 +389,7 @@ public class PaymentMenu extends JFrame {
             }
         }
 
-        if (validFirstName && validSurname && validPhone && validEmail && validCard && validExpiry) {
+        if ((vouchers == null) && validFirstName && validSurname && validPhone && validEmail && validCard && validExpiry) {
             System.out.println("Valid booking made");
             booking = new Booking();
             booking.dateBooked = discounts.bookDetails.dateBooked;
@@ -395,11 +399,11 @@ public class PaymentMenu extends JFrame {
             makeRoom();
             booking.roomType = room;
             booking.roomType.setIsStudent(discounts.studentDisStatus);
-            booking.roomType.setHasChildren(discounts.childDisStatus);
+//            booking.roomType.setHasChildren(discounts.childDisStatus);
             booking.phoneNumber = phoneNumber;
             booking.email = email;
             homepage.dbManager.addToBookingList(booking);
-            
+
             if (homepage.dbManager.isBSuccessful()) {
                 homepage.dbManager.resetBSuccessful();
                 JOptionPane.showMessageDialog(null, "Booking Successful!\nReturning to homepage", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -408,6 +412,12 @@ public class PaymentMenu extends JFrame {
             } else {
                 System.out.println("Failed to add booking");
             }
+        } else if ((vouchers != null) && validFirstName && validSurname && validPhone && validEmail && validCard && validExpiry) {
+            FileManager fm = new FileManager(vouchers);
+            fm.makeVoucher();
+            JOptionPane.showMessageDialog(null, "Voucher Sent to Email!\nReturning to Homepage.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            disposeVoucherCurrent();
+            returnToHome();
         }
     }
 
@@ -562,7 +572,7 @@ public class PaymentMenu extends JFrame {
             String removeLeadingZero = phoneInput.getText().substring(1);
             phoneInput.setText(removeLeadingZero);
         }
-        
+
         if (phoneInput.getText().length() != 9) {
             return false;
         }
@@ -833,6 +843,11 @@ public class PaymentMenu extends JFrame {
         });
     }
     
+    private void disposeVoucherCurrent() {
+        vouchers.voucherDetails.dispose();
+        vouchers.dispose();
+    }
+
     private void disposeCurrent() {
         if (discounts.isDisplayable()) {
             discounts.dispose();
@@ -850,7 +865,7 @@ public class PaymentMenu extends JFrame {
             discounts.bookDetails.roomTypes.booking.dispose();
         }
     }
-    
+
     private void returnToHome() {
         homepage.setLocation((homepage.screenWidth / 2) - (homepage.width / 2), ((homepage.screenHeight / 2) - (homepage.height / 2)));
         homepage.setVisible(true);
@@ -858,7 +873,7 @@ public class PaymentMenu extends JFrame {
             dispose();
         }
     }
-    
+
     private void makeRoom() {
         if (homepage.bookingMenu.roomTypesMenu.selectedRoom.contains("Single")) {
             room = new SingleRoom();
