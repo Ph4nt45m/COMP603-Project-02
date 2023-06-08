@@ -34,6 +34,7 @@ public class BookingMenu extends JFrame {
     protected final int height = 300;
     protected Homepage homepage;
     protected RoomTypes roomTypesMenu;
+    protected CheckBooking checkBooking;
 
     public BookingMenu(Homepage home) {
         this.homepage = home;
@@ -96,7 +97,8 @@ public class BookingMenu extends JFrame {
     }
 
     private void checkBookingActionPerformed(ActionEvent evt) {
-        
+        checkBooking = new CheckBooking(homepage, this);
+        setVisible(false);
     }
 
     private void setHomeButton() {
