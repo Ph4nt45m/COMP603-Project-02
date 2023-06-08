@@ -57,14 +57,6 @@ public class DiscountMenu extends JFrame {
     protected boolean validStudentInput;
     protected boolean validChildInput;
 
-    public DiscountMenu() {
-        this.studentDisStatus = false;
-        this.childDisStatus = false;
-        this.validStudentInput = false;
-        this.validChildInput = false;
-        setComponents();
-    }
-
     public DiscountMenu(Homepage home, BookingDetails bookingDetails) {
         this.homepage = home;
         this.bookDetails = bookingDetails;
@@ -273,7 +265,6 @@ public class DiscountMenu extends JFrame {
                     studentErrorMsg.setText("* Text field required");
                 } else if (bookDetails.verifyCharacters(studentInput.getText())) {
                     if (checkStudent()) {
-                        studentDisStatus = true;
                         if (!studentErrorMsg.getText().isEmpty()) {
                             studentErrorMsg.setText("");
                         }
