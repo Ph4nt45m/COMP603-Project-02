@@ -17,10 +17,6 @@ public class GroupRoom extends Room {
         this.hasChildren = false;
     }
 
-    public void setHasChildren(boolean hasChildren) {
-        this.hasChildren = hasChildren;
-    }
-
     @Override
     public double calculateCost() {
         if (super.isStudent()) {
@@ -35,5 +31,10 @@ public class GroupRoom extends Room {
     @Override
     public boolean hasChildren() {
         return hasChildren;
+    }
+
+    @Override
+    public void setHasChildren(boolean hasChildren) {
+        this.hasChildren = hasChildren;
     }
 }
