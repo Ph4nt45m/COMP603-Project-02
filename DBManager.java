@@ -21,6 +21,8 @@ public final class DBManager {
     private ArrayList<Booking> bookingsList;
     private boolean bookingSuccessful;
     private LocalDate currentDate;
+    protected Map<String, String> faqMap;
+
 
     Connection conn;
 
@@ -177,8 +179,8 @@ public final class DBManager {
         }
     }
 
-    public Map<String, String> getQuestionsAndAnswers() {
-        Map<String, String> faqMap = new HashMap<>();
+public void getQuestionsAndAnswers() {
+        faqMap = new HashMap<>();
 
         try {
             Statement statement = conn.createStatement();
@@ -195,7 +197,30 @@ public final class DBManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return faqMap;
+    }
+    
+    public Map<String, String> getAnswerForQuestion(String question) {
+        Map<String, String> similarQ = new HashMap();
+        
+        String[] compareQ = question.split(" ");
+        int count = 0;
+        for (Map.Entry<String, String> entry : faqMap.entrySet()) {
+            String[] holder = entry.getKey().split(" ");
+            for (String main : holder) {
+                for (String target : compareQ) {
+                    if (target.equalsIgnoreCase(main)) {
+                        count++;
+                        break;
+                    }
+                }
+            }
+            double percentage = (double) count;
+            double thirdCompatibility = (((double) compareQ.length + (double) holder.length)) * 0.15;
+            if (percentage >= thirdCompatibility) {
+                similarQ.put(entry.getKey(), entry.getValue());
+            }
+        }
+        
+        return similarQ;
     }
 }
