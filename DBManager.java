@@ -27,11 +27,11 @@ public final class DBManager {
     private final String PASSWORD = "MAH";
     private final String projectFolderPath;
     private final String databaseFolderPath;
+    private final LocalDate currentDate;
     private ArrayList<Booking> bookingsList;
     private boolean bookingSuccessful;
-    private LocalDate currentDate;
+    private Room room;
     protected Map<String, String> faqMap;
-
 
     Connection conn;
 
@@ -43,7 +43,7 @@ public final class DBManager {
         this.currentDate = LocalDate.now();
 
         establishConnection();
-//        readBookingsList();
+        readBookingsList();
         flagBookings();
     }
 
@@ -82,26 +82,79 @@ public final class DBManager {
             ResultSet booking = statement.executeQuery("SELECT * FROM BOOKINGLIST");
 
             while (booking.next()) {
+                Booking newBooking = new Booking();
+                
                 String[] bookingDate = booking.getString("BOOKINGDATE").split("/");
                 int dayBook = Integer.parseInt(bookingDate[0]);
                 int monthBook = Integer.parseInt(bookingDate[1]);
                 int yearBook = Integer.parseInt(bookingDate[2]);
-                Date dateBook = new Date(dayBook, monthBook, yearBook);
-                
-                String[] bookingLeave = booking.getString("BOOKINGDLEAVE").split("/");
+                newBooking.dateBooked = new Date(dayBook, monthBook, yearBook);
+
+                String[] bookingLeave = booking.getString("BOOKINGLEAVE").split("/");
                 int dayLeave = Integer.parseInt(bookingLeave[0]);
                 int monthLeave = Integer.parseInt(bookingLeave[1]);
                 int yearLeave = Integer.parseInt(bookingLeave[2]);
-                Date dateLeave = new Date(dayLeave, monthLeave, yearLeave);
-                
-                String firstName = booking.getString("FIRSTNAME");
-                String surname = booking.getString("SURNAME");
+                newBooking.dateLeave = new Date(dayLeave, monthLeave, yearLeave);
+
+                newBooking.firstName = booking.getString("FIRSTNAME");
+                newBooking.surname = booking.getString("SURNAME");
                 String roomType = booking.getString("ROOMTYPE");
+                makeRoom(roomType);
+                room.setIsStudent(booking.getBoolean("STUDENTDISCOUNT"));
+                room.setHasChildren(booking.getBoolean("CHILDDISCOUNT"));
+                room.cost = booking.getDouble("COST");
+                newBooking.roomType = room;
+                newBooking.phoneNumber = booking.getString("PHONENUMBER");
+                newBooking.email = booking.getString("EMAIL");
                 
+                bookingsList.add(newBooking);
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private Room makeRoom(String roomType) {
+        if (roomType.contains("Single")) {
+            room = new SingleRoom();
+        } else if (roomType.contains("Double")) {
+            room = new DoubleRoom();
+        } else if (roomType.contains("Family")) {
+            room = new FamilyRoom();
+        } else if (roomType.contains("Group")) {
+            room = new GroupRoom();
+        }
+        
+        return room;
+    }
+
+    public ArrayList<Booking> checkForBooking(String firstName, String surname, String phone) {
+        ArrayList<Booking> foundBookings = new ArrayList<>();
+        for (Booking token : bookingsList) {
+            if (firstName != null) {
+                if (firstName.equalsIgnoreCase(token.firstName)) {
+                    if (!foundBookings.contains(token)) {
+                        foundBookings.add(token);
+                    }
+                }
+            }
+            if (surname != null) {
+                if (surname.equalsIgnoreCase(token.surname)) {
+                    if (!foundBookings.contains(token)) {
+                        foundBookings.add(token);
+                    }
+                }
+            }
+            if (phone != null) {
+                if (phone.equals(token.phoneNumber)) {
+                    if (!foundBookings.contains(token)) {
+                        foundBookings.add(token);
+                    }
+                }
+            }
+        }
+
+        return foundBookings;
     }
 
     public void addToBookingList(Booking booking) {
@@ -187,8 +240,8 @@ public final class DBManager {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-public void getQuestionsAndAnswers() {
+    
+    public void getQuestionsAndAnswers() {
         faqMap = new HashMap<>();
 
         try {
