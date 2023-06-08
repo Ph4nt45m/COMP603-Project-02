@@ -20,4 +20,16 @@ public class Booking {
     public Booking() {
         
     }
+    
+    @Override
+    public String toString() {
+        return "Date Booked: " + dateBooked.toString() + "\n" +
+               "Date Leave: " + dateLeave.toString() + "\n" +
+                "First Name: " + firstName + "\n" +
+                "Surname: " + surname + "\n" +
+                "Room Type: " + roomType.getRoomType() + "\n" +
+                "Cost: " + roomType.calculateCost() + "\n" +
+                "Phone: " + phoneNumber + "\n" +
+                "Email: " + email + "\n\n";
+    }
 }
