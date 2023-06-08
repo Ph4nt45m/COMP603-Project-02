@@ -38,7 +38,7 @@ public class BookingDetails extends JFrame {
     protected JTextField durationInput;
     private JLabel lDateErrorMsg;
     private JLabel durationFormatLabel;
-    private JButton book;
+    private JButton bookButton;
     private JPanel mainPanel;
 
     protected final int width = 800;
@@ -75,7 +75,7 @@ public class BookingDetails extends JFrame {
         durationInput = new JTextField();
         lDateErrorMsg = new JLabel();
         durationFormatLabel = new JLabel();
-        book = new JButton();
+        bookButton = new JButton();
         mainPanel = new JPanel();
 
         setHomeButton();
@@ -152,7 +152,7 @@ public class BookingDetails extends JFrame {
             datePicker.dispose();
         }
 
-        roomTypes.setLocation((homepage.width / 2) - (roomTypes.getWidth() / 2), ((homepage.height / 2) - (roomTypes.getHeight())));
+        roomTypes.setLocation((homepage.screenWidth / 2) - (roomTypes.width / 2), ((homepage.screenHeight / 2) - (roomTypes.height / 2)));
         roomTypes.roomDetails.setLocation(roomTypes.getX() + 8, (roomTypes.getY() + roomTypes.getHeight() - 2));
         roomTypes.setVisible(true);
         roomTypes.roomDetails.setVisible(true);
@@ -172,7 +172,7 @@ public class BookingDetails extends JFrame {
         bDateLabel.setFont(new Font("Segoe UI", 0, 18));
         bDateLabel.setHorizontalAlignment(SwingConstants.TRAILING);
         bDateLabel.setText("Booking Date:");
-        bDateLabel.setBounds(30, 143, 200, 20);
+        bDateLabel.setBounds(30, 140, 200, 30);
     }
 
     private void setBDateInput() {
@@ -193,7 +193,7 @@ public class BookingDetails extends JFrame {
 
     private void setBDateErrorMsg() {
         bDateErrorMsg.setForeground(Color.red);
-        bDateErrorMsg.setBounds(540, 140, 250, 32);
+        bDateErrorMsg.setBounds(540, 140, 250, 30);
     }
 
     private void setBDateFormatLabel() {
@@ -206,7 +206,7 @@ public class BookingDetails extends JFrame {
         durationLabel.setFont(new Font("Segoe UI", 0, 18));
         durationLabel.setHorizontalAlignment(SwingConstants.TRAILING);
         durationLabel.setText("Duration of stay:");
-        durationLabel.setBounds(30, 230, 200, 20);
+        durationLabel.setBounds(30, 230, 200, 30);
     }
 
     private void setDurationInput() {
@@ -225,21 +225,21 @@ public class BookingDetails extends JFrame {
 
     private void setDurationErrorMsg() {
         lDateErrorMsg.setForeground(Color.red);
-        lDateErrorMsg.setBounds(540, 228, 250, 32);
+        lDateErrorMsg.setBounds(540, 228, 250, 30);
     }
 
     private void setDurationFormatLabel() {
         durationFormatLabel.setFont(new Font("Segoe UI", 2, 15));
         durationFormatLabel.setText("Number of days (Max: 100)");
-        durationFormatLabel.setBounds(245, 260, 200, 20);
+        durationFormatLabel.setBounds(245, 260, 200, 30);
     }
 
     private void setBookButton() {
-        book.setFont(new Font("Segoe UI", 0, 18));
-        book.setText("Book Room");
-        book.setBounds(335, 320, 140, 40);
+        bookButton.setFont(new Font("Segoe UI", 0, 18));
+        bookButton.setText("Book Room");
+        bookButton.setBounds(335, 320, 140, 40);
 
-        book.addActionListener(new ActionListener() {
+        bookButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 bookButtonAction(e);
@@ -504,7 +504,7 @@ public class BookingDetails extends JFrame {
         mainPanel.add(bDateInput);
         mainPanel.add(bDateFormatLabel);
         mainPanel.add(durationFormatLabel);
-        mainPanel.add(book);
+        mainPanel.add(bookButton);
         mainPanel.add(bDateErrorMsg);
         mainPanel.add(lDateErrorMsg);
     }
