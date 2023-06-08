@@ -76,8 +76,10 @@ public class PaymentMenu extends JFrame {
     protected String expiry;
     protected int monthExpiry;
     protected int yearExpiry;
+    protected boolean expired;
     protected String selectedPhoneType;
     private Booking booking;
+    private Room room;
 
     public PaymentMenu() {
         setComponents();
@@ -161,33 +163,14 @@ public class PaymentMenu extends JFrame {
         homeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                homeButtonAction(e);
+                homeButtonAction(e);
             }
         });
     }
 
     private void homeButtonAction(ActionEvent evt) {
-        if (discounts.isDisplayable()) {
-            discounts.dispose();
-        }
-        if (discounts.bookDetails.isDisplayable()) {
-            discounts.bookDetails.dispose();
-        }
-        if (discounts.bookDetails.roomTypes.isDisplayable()) {
-            discounts.bookDetails.roomTypes.dispose();
-        }
-        if (discounts.bookDetails.roomTypes.roomDetails.isDisplayable()) {
-            discounts.bookDetails.roomTypes.roomDetails.dispose();
-        }
-        if (discounts.bookDetails.roomTypes.booking.isDisplayable()) {
-            discounts.bookDetails.roomTypes.booking.dispose();
-        }
-
-        homepage.setLocation((homepage.width / 2) - (homepage.getWidth() / 2), ((homepage.height / 2) - (homepage.getHeight())));
-        homepage.setVisible(true);
-        if (isDisplayable()) {
-            dispose();
-        }
+        disposeCurrent();
+        returnToHome();
     }
 
     private void setBackButton() {
@@ -197,7 +180,7 @@ public class PaymentMenu extends JFrame {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                backButtonAction(e);
+                backButtonAction(e);
             }
         });
     }
@@ -286,6 +269,7 @@ public class PaymentMenu extends JFrame {
 
     private void setCardTitle() {
         cardTitle.setFont(new Font("Segoe UI", 0, 20));
+        cardTitle.setText("Card Details:");
         cardTitle.setBounds(180, 440, 130, 30);
     }
 
@@ -355,47 +339,75 @@ public class PaymentMenu extends JFrame {
         boolean validEmail = verifyEmail();
         boolean validCard = verifyCard();
         boolean validExpiry = verifyExpiry();
-        
+
         if (!validFirstName) {
-            if (firstNameErrorMsg.getText().isEmpty()) {
+            if (firstNameInput.getText().isEmpty()) {
+                firstNameErrorMsg.setText("* Text field required");
+            } else {
                 firstNameErrorMsg.setText("* Invalid input");
             }
         }
         if (!validSurname) {
-            if (surnameErrorMsg.getText().isEmpty()) {
+            if (surnameInput.getText().isEmpty()) {
+                surnameErrorMsg.setText("* Text field required");
+            } else {
                 surnameErrorMsg.setText("* Invalid input");
             }
         }
         if (!validPhone) {
-            if (phoneErrorMsg.getText().isEmpty()) {
+            if (phoneInput.getText().isEmpty()) {
+                phoneErrorMsg.setText("* Text field required");
+            } else {
                 phoneErrorMsg.setText("* Invalid input");
             }
         }
         if (!validEmail) {
-            if (emailErrorMsg.getText().isEmpty()) {
+            if (emailInput.getText().isEmpty()) {
+                emailErrorMsg.setText("* Text field required");
+            } else {
                 emailErrorMsg.setText("* Invalid input");
             }
         }
         if (!validCard) {
-            if (cardErrorMsg.getText().isEmpty()) {
+            if (cardInput.getText().isEmpty()) {
+                cardErrorMsg.setText("* Text field required");
+            } else {
                 cardErrorMsg.setText("* Invalid input");
             }
         }
         if (!validExpiry) {
-            if (expiryErrorMsg.getText().isEmpty()) {
+            if (expiryInput.getText().isEmpty()) {
+                expiryErrorMsg.setText("* Text field required");
+            } else if (expired) {
+                expiryErrorMsg.setText("* Card is expired");
+            } else {
                 expiryErrorMsg.setText("* Invalid input");
             }
         }
-        
+
         if (validFirstName && validSurname && validPhone && validEmail && validCard && validExpiry) {
+            System.out.println("Valid booking made");
             booking = new Booking();
-            booking.roomType = homepage.bookingMenu.roomTypesMenu.room;
             booking.dateBooked = discounts.bookDetails.dateBooked;
             booking.dateLeave = discounts.bookDetails.dateLeave;
             booking.firstName = firstName;
             booking.surname = surname;
+            makeRoom();
+            booking.roomType = room;
+            booking.roomType.setIsStudent(discounts.studentDisStatus);
+            booking.roomType.setHasChildren(discounts.childDisStatus);
             booking.phoneNumber = phoneNumber;
             booking.email = email;
+            homepage.dbManager.addToBookingList(booking);
+            
+            if (homepage.dbManager.isBSuccessful()) {
+                homepage.dbManager.resetBSuccessful();
+                JOptionPane.showMessageDialog(null, "Booking Successful!\nReturning to homepage", "Success", JOptionPane.INFORMATION_MESSAGE);
+                disposeCurrent();
+                returnToHome();
+            } else {
+                System.out.println("Failed to add booking");
+            }
         }
     }
 
@@ -403,7 +415,6 @@ public class PaymentMenu extends JFrame {
         String trimInput = firstNameInput.getText().trim();
         firstNameInput.setText(trimInput);
         if (firstNameInput.getText().isEmpty()) {
-            firstNameErrorMsg.setText("* Text field required");
             return false;
         }
 
@@ -433,7 +444,7 @@ public class PaymentMenu extends JFrame {
                 }
                 firstName = temp;
             } else {
-                String capitalizeInitial = holder.substring(0, 1);
+                String capitalizeInitial = holder.substring(0, 1).toUpperCase();
                 String remaining = holder.substring(1);
                 firstName = capitalizeInitial + remaining;
             }
@@ -448,7 +459,6 @@ public class PaymentMenu extends JFrame {
         String trimInput = surnameInput.getText().trim();
         surnameInput.setText(trimInput);
         if (surnameInput.getText().isEmpty()) {
-            surnameErrorMsg.setText("* Text field required");
             return false;
         }
 
@@ -478,7 +488,7 @@ public class PaymentMenu extends JFrame {
                 }
                 surname = temp;
             } else {
-                String capitalizeInitial = holder.substring(0, 1);
+                String capitalizeInitial = holder.substring(0, 1).toUpperCase();
                 String remaining = holder.substring(1);
                 surname = capitalizeInitial + remaining;
             }
@@ -494,13 +504,12 @@ public class PaymentMenu extends JFrame {
         phoneInput.setText(trimInput);
         boolean valid = true;
         if (phoneInput.getText().isEmpty()) {
-            phoneErrorMsg.setText("* Text field required");
             valid = false;
         } else {
             selectedPhoneType = (String) phoneType.getSelectedItem();
-            if (selectedPhoneType.equalsIgnoreCase("Home")) {
+            if (selectedPhoneType.contains("Home")) {
                 valid = homePhone();
-            } else if (selectedPhoneType.equalsIgnoreCase("Mobile")) {
+            } else if (selectedPhoneType.contains("Mobile")) {
                 valid = mobilePhone();
             }
         }
@@ -537,7 +546,7 @@ public class PaymentMenu extends JFrame {
         if (isDigit) {
             String[] check = phoneInput.getText().split(" ");
             if (check[0].length() != 3 || check[1].length() != 4) {
-                //return false;
+                return false;
             } else {
                 phoneNumber = "09 " + phoneInput.getText();
             }
@@ -549,6 +558,11 @@ public class PaymentMenu extends JFrame {
     }
 
     private boolean mobilePhone() {
+        if (phoneInput.getText().charAt(0) == '0') {
+            String removeLeadingZero = phoneInput.getText().substring(1);
+            phoneInput.setText(removeLeadingZero);
+        }
+        
         if (phoneInput.getText().length() != 9) {
             return false;
         }
@@ -574,7 +588,6 @@ public class PaymentMenu extends JFrame {
         emailInput.setText(trimInput);
         boolean validEmail = false;
         if (emailInput.getText().isEmpty()) {
-            emailErrorMsg.setText("* Text field required");
             return validEmail;
         }
         if (!emailInput.getText().contains("@") || emailInput.getText().contains(" ")) {
@@ -600,6 +613,7 @@ public class PaymentMenu extends JFrame {
             for (String suffix : validEmails) {
                 if (suffix.contains(holder[1])) {
                     validEmail = true;
+                    email = emailInput.getText();
                     break;
                 }
             }
@@ -613,7 +627,6 @@ public class PaymentMenu extends JFrame {
         cardInput.setText(trimInput);
         boolean validCard = false;
         if (cardInput.getText().isEmpty()) {
-            cardErrorMsg.setText("* Text field required");
             return validCard;
         }
 
@@ -654,7 +667,7 @@ public class PaymentMenu extends JFrame {
             validLength = false;
         }
 
-        if (isDigit || validLength) {
+        if (isDigit && validLength) {
             validCard = true;
             for (String token : cardNumbers) {
                 cardNumber += token + " ";
@@ -669,7 +682,6 @@ public class PaymentMenu extends JFrame {
         expiryInput.setText(trimInput);
         boolean validExpiry = false;
         if (expiryInput.getText().isEmpty()) {
-            expiryErrorMsg.setText("* Text field required");
             return validExpiry;
         }
         if (!expiryInput.getText().contains("/")) {
@@ -741,12 +753,14 @@ public class PaymentMenu extends JFrame {
 
     private boolean verifyDate(String date) {
         currentDate = LocalDate.now();
+        expired = false;
         String[] holder = date.split("/");
         int month = Integer.parseInt(holder[0]);
         int year = Integer.parseInt(holder[1]);
         boolean valid = true;
 
         if (year < currentDate.getYear()) {
+            expired = true;
             valid = false;
         }
 
@@ -758,6 +772,7 @@ public class PaymentMenu extends JFrame {
 
         if (valid) {
             if (year == currentDate.getYear() && month == currentDate.getMonthValue()) {
+                expired = true;
                 valid = false;
             }
         }
@@ -802,19 +817,57 @@ public class PaymentMenu extends JFrame {
     private void setFrame() {
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setBackground(Color.WHITE);
-//        setLocation(((homepage.width / 2) - (width / 2)), ((homepage.height / 2) - (height / 2)));
-        setLocationRelativeTo(null);
+        setLocation(((homepage.screenWidth / 2) - (width / 2)), ((homepage.screenHeight / 2) - (height / 2)));
+//        setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);
 
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-//                homepage.dbManager.closeConnections();
+                homepage.dbManager.closeConnections();
 
                 dispose();
                 System.exit(0);
             }
         });
+    }
+    
+    private void disposeCurrent() {
+        if (discounts.isDisplayable()) {
+            discounts.dispose();
+        }
+        if (discounts.bookDetails.isDisplayable()) {
+            discounts.bookDetails.dispose();
+        }
+        if (discounts.bookDetails.roomTypes.isDisplayable()) {
+            discounts.bookDetails.roomTypes.dispose();
+        }
+        if (discounts.bookDetails.roomTypes.roomDetails.isDisplayable()) {
+            discounts.bookDetails.roomTypes.roomDetails.dispose();
+        }
+        if (discounts.bookDetails.roomTypes.booking.isDisplayable()) {
+            discounts.bookDetails.roomTypes.booking.dispose();
+        }
+    }
+    
+    private void returnToHome() {
+        homepage.setLocation((homepage.screenWidth / 2) - (homepage.width / 2), ((homepage.screenHeight / 2) - (homepage.height / 2)));
+        homepage.setVisible(true);
+        if (isDisplayable()) {
+            dispose();
+        }
+    }
+    
+    private void makeRoom() {
+        if (homepage.bookingMenu.roomTypesMenu.selectedRoom.contains("Single")) {
+            room = new SingleRoom();
+        } else if (homepage.bookingMenu.roomTypesMenu.selectedRoom.contains("Double")) {
+            room = new DoubleRoom();
+        } else if (homepage.bookingMenu.roomTypesMenu.selectedRoom.contains("Family")) {
+            room = new FamilyRoom();
+        } else if (homepage.bookingMenu.roomTypesMenu.selectedRoom.contains("Group")) {
+            room = new GroupRoom();
+        }
     }
 }
