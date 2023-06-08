@@ -304,7 +304,7 @@ public class Facilities extends JFrame {
             restaurantMenu.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String filePath = "Menu.txt"; 
+                    String filePath = "./resources/Menu.txt"; 
                     String menuContent = readMenuFile(filePath);
                     if (menuContent != null) {
                         JFrame menuFrame = new JFrame();
