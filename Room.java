@@ -44,4 +44,6 @@ public abstract class Room {
     public abstract double calculateCost();
     
     public abstract boolean hasChildren();
+    
+    public abstract void setHasChildren(boolean status);
 }
