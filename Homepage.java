@@ -10,10 +10,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
- * @author snipi
+ * @author m4ria
  */
 public class Homepage extends JFrame {
 
@@ -32,9 +35,10 @@ public class Homepage extends JFrame {
     protected final int height = 600;
     protected DBManager dbManager;
     protected BookingMenu bookingMenu;
-//    protected Facilites facilities;
+    protected Facilities facilities;
     protected Vouchers voucherMenu;
     protected Contacts contacts;
+    protected FAQ faq;
     private final Toolkit toolKit;
     private final Dimension screenDim;
 
@@ -107,10 +111,10 @@ public class Homepage extends JFrame {
     }
 
     private void facilitiesButton(ActionEvent evt) {
-//        setVisible(false);
-//        facilities = new Facilities(this);
-//        facilities.setLocationRelativeTo(null);
-//        facilities.setVisible(true);
+        setVisible(false);
+        facilities = new Facilities(this);
+        facilities.setLocationRelativeTo(null);
+        facilities.setVisible(true);
     }
 
     private void setFAQsButton() {
@@ -121,13 +125,20 @@ public class Homepage extends JFrame {
         faqsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                faqsButton(e);
+                try {
+                    faqsButton(e);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Homepage.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
-    private void faqsButton(ActionEvent evt) {
-
+    private void faqsButton(ActionEvent evt) throws SQLException {
+        setVisible(false);
+        faq = new FAQ(this);
+        faq.setLocationRelativeTo(null);
+        faq.setVisible(true);
     }
 
     private void setVouchersButton() {
@@ -151,7 +162,7 @@ public class Homepage extends JFrame {
 
     private void setContactsButton() {
         contactsButton.setFont(new Font("Segoe UI", 0, 16));
-        contactsButton.setText("Contacts");
+        contactsButton.setText("Contact Us");
         contactsButton.setPreferredSize(new Dimension(200, 45));
         
         contactsButton.addActionListener(new ActionListener() {
@@ -163,10 +174,10 @@ public class Homepage extends JFrame {
     }
 
     private void contactButton(ActionEvent evt) {
-//        setVisible(false);
-//        contacts = new Contacts(this);
-//        contacts.setLocationRelativeTo(null);
-//        contacts.setVisible(true);
+        setVisible(false);
+        contacts = new Contacts(this);
+        contacts.setLocationRelativeTo(null);
+        contacts.setVisible(true);
     }
 
     private void setButtonPanel() {
