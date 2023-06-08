@@ -17,10 +17,6 @@ public class FamilyRoom extends Room {
         this.hasChildren = false;
     }
 
-    public void setHasChildren(boolean hasChildren) {
-        this.hasChildren = hasChildren;
-    }
-    
     @Override
     public double calculateCost() {
         if (hasChildren()) {
@@ -33,5 +29,10 @@ public class FamilyRoom extends Room {
     @Override
     public boolean hasChildren() {
         return hasChildren;
+    }
+    
+    @Override
+    public void setHasChildren(boolean hasChildren) {
+        this.hasChildren = hasChildren;
     }
 }
