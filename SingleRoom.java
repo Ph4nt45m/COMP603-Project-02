@@ -26,4 +26,9 @@ public class SingleRoom extends Room {
     public boolean hasChildren() {
         return false;
     }
+    
+    @Override
+    public void setHasChildren(boolean hasChildren) {
+        
+    }
 }
