@@ -36,4 +36,9 @@ public class DoubleRoom extends Room {
     public boolean hasChildren() {
         return hasChildren;
     }
+    
+    @Override
+    public void setHasChildren(boolean hasChildren) {
+        this.hasChildren = hasChildren;
+    }
 }
