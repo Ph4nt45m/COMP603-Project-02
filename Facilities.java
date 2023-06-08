@@ -106,20 +106,20 @@ public class Facilities extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(null);
 
-//        JButton wifi = createButton("WIFI", "You have chosen WIFI.\n\n"
-//                + "Keep productive whilst staying at Marl Avenue Hotel, with unlimited Wi-Fi in all areas of the hotel. "
-//                + "The Business Centre offers guests 24-hour access to a range of facilities and services including computers, "
-//                + "printers, and photocopying, as well as courier and secretarial services.");
-        JButton wifi = new JButton();
-        wifi.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                createPanel("WIFI", "You have chosen WIFI.\n\n"
-                        + "Keep productive whilst staying at Marl Avenue Hotel, with unlimited Wi-Fi in all areas of the hotel. "
-                        + "The Business Centre offers guests 24-hour access to a range of facilities and services including computers, "
-                        + "printers, and photocopying, as well as courier and secretarial services.");
-                dispose();
-            }
-        });
+        JButton wifi = createButton("WIFI", "You have chosen WIFI.\n\n"
+                + "Keep productive whilst staying at Marl Avenue Hotel, with unlimited Wi-Fi in all areas of the hotel. "
+                + "The Business Centre offers guests 24-hour access to a range of facilities and services including computers, "
+                + "printers, and photocopying, as well as courier and secretarial services.");
+//        JButton wifi = new JButton();
+//        wifi.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                createPanel("WIFI", "You have chosen WIFI.\n\n"
+//                        + "Keep productive whilst staying at Marl Avenue Hotel, with unlimited Wi-Fi in all areas of the hotel. "
+//                        + "The Business Centre offers guests 24-hour access to a range of facilities and services including computers, "
+//                        + "printers, and photocopying, as well as courier and secretarial services.");
+//                dispose();
+//            }
+//        });
         wifi.setBounds(205, 110, 150, 40);
 
         mainPanel.add(wifi);
