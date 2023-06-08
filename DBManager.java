@@ -176,4 +176,26 @@ public final class DBManager {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public Map<String, String> getQuestionsAndAnswers() {
+        Map<String, String> faqMap = new HashMap<>();
+
+        try {
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT QUESTION, ANSWER FROM FAQ");
+
+            while (resultSet.next()) {
+                String question = resultSet.getString("QUESTION");
+                String answer = resultSet.getString("ANSWER");
+                faqMap.put(question, answer);
+            }
+
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return faqMap;
+    }
 }
