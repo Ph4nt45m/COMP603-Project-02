@@ -37,34 +37,34 @@ import javax.swing.table.JTableHeader;
  */
 public class DatePicker extends JFrame {
 
-    JPanel mainPanel = new JPanel();
-    JScrollPane jScrollPane2 = new JScrollPane();
-    JTable calendar = new JTable();
-    JLabel monthLabel = new JLabel();
-    JButton leftButton = new JButton();
-    JButton rightButton = new JButton();
-    JLabel yearLabel = new JLabel();
+    private JPanel mainPanel;
+    private JLabel yearLabel;
+    private JLabel monthLabel;
+    private JTable calendar;
+    private JScrollPane jScrollPane2;
+    private JButton leftButton;
+    private JButton rightButton;
 
-    final String[] months = {"January", "February", "March", "April", "May", "June", "July",
+    private final String[] months = {"January", "February", "March", "April", "May", "June", "July",
         "August", "September", "October", "November", "December"};
-    int monthIndex;
-    int currentMonthIndex;
-    int yearIndex;
-    int yearLimit;
-    final String[] days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
-    LocalDate date;
-    DateTimeFormatter formatter;
-    String currentDate;
-    int day;
-    int month;
-    int year;
-    String selectedDate;
-    Integer selectedDay;
-    Integer selectedMonth;
-    Integer selectedYear;
-    BookingDetails userDetails;
-    ImageIcon left;
-    ImageIcon right;
+    private int monthIndex;
+    private int currentMonthIndex;
+    private int yearIndex;
+    private int yearLimit;
+    private final String[] days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+    private LocalDate date;
+    private DateTimeFormatter formatter;
+    protected String currentDate;
+    private int day;
+    private int month;
+    private int year;
+    private String selectedDate;
+    private Integer selectedDay;
+    private Integer selectedMonth;
+    private Integer selectedYear;
+    private BookingDetails userDetails;
+    private ImageIcon left;
+    private ImageIcon right;
 
     public DatePicker(BookingDetails usersDetails) {
         this.date = LocalDate.now();
@@ -84,33 +84,7 @@ public class DatePicker extends JFrame {
         this.left = new ImageIcon("./resources/Left.png");
         this.right = new ImageIcon("./resources/Right.png");
         setComponents();
-        DefaultTableModel tableModel = (DefaultTableModel) calendar.getModel();
-        tableModel.setColumnCount(7);
-        tableModel.setRowCount(6);
-        tableModel.setColumnIdentifiers(days);
-
-        calendar.setCellSelectionEnabled(true);
-        calendar.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
-        calendar.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        JTableHeader tableHeader = calendar.getTableHeader();
-        tableHeader.setReorderingAllowed(false);
-
-        monthLabel.setText(months[monthIndex]);
-        yearLabel.setText(this.yearIndex + "");
-
-        leftButton.setIcon(left);
-        leftButton.setEnabled(false);
-        rightButton.setIcon(right);
-
         updateCalendar();
-
-        calendar.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                getSelectedDate();
-            }
-        });
     }
 
     class CustomTableCellRenderer extends DefaultTableCellRenderer {
@@ -123,7 +97,7 @@ public class DatePicker extends JFrame {
                     false, false, row, column);
 
             cell.setBackground(table.getBackground());
-            
+
             return cell;
         }
     }
@@ -243,59 +217,22 @@ public class DatePicker extends JFrame {
     }
 
     private void setComponents() {
+        mainPanel = new JPanel();
+        yearLabel = new JLabel();
+        monthLabel = new JLabel();
+        calendar = new JTable();
+        jScrollPane2 = new JScrollPane();
+        leftButton = new JButton();
+        rightButton = new JButton();
 
-        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        setAlwaysOnTop(true);
-        setAutoRequestFocus(false);
-        setUndecorated(true);
-
-        mainPanel.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-
-        calendar.setRowHeight(30);
-        calendar.setShowHorizontalLines(true);
-        calendar.setShowVerticalLines(true);
-        jScrollPane2.setViewportView(calendar);
-
-        monthLabel.setFont(new Font("Segoe UI", 0, 18));
-        monthLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        leftButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                leftButtonActionPerformed(e);
-            }
-        });
-
-        rightButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                rightButtonActionPerformed(e);
-            }
-        });
-
-        yearLabel.setFont(new Font("Segoe UI", 0, 18));
-        yearLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        mainPanel.setLayout(null);
-
-        yearLabel.setBounds(116, 10, 80, 30);
-
-        leftButton.setBounds(30, 50, 31, 37);
-        monthLabel.setBounds(70, 45, 160, 40);
-        rightButton.setBounds(245, 50, 31, 37);
-
-        jScrollPane2.setBounds(5, 100, 300, 208);
-
-        mainPanel.add(yearLabel);
-        mainPanel.add(leftButton);
-        mainPanel.add(monthLabel);
-        mainPanel.add(rightButton);
-        mainPanel.add(jScrollPane2);
-
-        mainPanel.setPreferredSize(new Dimension(310, 315));
-        getContentPane().add(mainPanel);
-
-        pack();
+        setFrame();
+        setCalendar();
+        setYearLabel();
+        setMonthLabel();
+        setLeftButton();
+        setRightButton();
+        setMainPanel();
+        formatTable();
     }
 
     private void leftButtonActionPerformed(ActionEvent evt) {
@@ -304,5 +241,95 @@ public class DatePicker extends JFrame {
 
     private void rightButtonActionPerformed(ActionEvent evt) {
         incrementMonth();
+    }
+
+    private void setFrame() {
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        setAlwaysOnTop(true);
+        setAutoRequestFocus(false);
+        setUndecorated(true);
+    }
+
+    private void setCalendar() {
+        calendar.setRowHeight(30);
+        calendar.setShowHorizontalLines(true);
+        calendar.setShowVerticalLines(true);
+        jScrollPane2.setViewportView(calendar);
+        jScrollPane2.setBounds(5, 100, 300, 208);
+
+        calendar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                getSelectedDate();
+            }
+        });
+    }
+
+    private void setYearLabel() {
+        yearLabel.setFont(new Font("Segoe UI", 0, 18));
+        yearLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        yearLabel.setText(this.yearIndex + "");
+        yearLabel.setBounds(116, 10, 80, 30);
+    }
+
+    private void setMonthLabel() {
+        monthLabel.setFont(new Font("Segoe UI", 0, 18));
+        monthLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        monthLabel.setText(months[monthIndex]);
+        monthLabel.setBounds(70, 45, 160, 40);
+    }
+
+    private void setLeftButton() {
+        leftButton.setBounds(30, 50, 31, 37);
+        leftButton.setIcon(left);
+        leftButton.setEnabled(false);
+
+        leftButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                leftButtonActionPerformed(e);
+            }
+        });
+    }
+
+    private void setRightButton() {
+        rightButton.setBounds(245, 50, 31, 37);
+        rightButton.setIcon(right);
+
+        rightButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rightButtonActionPerformed(e);
+            }
+        });
+    }
+
+    private void setMainPanel() {
+        mainPanel.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+        mainPanel.setLayout(null);
+        mainPanel.setPreferredSize(new Dimension(310, 315));
+
+        mainPanel.add(yearLabel);
+        mainPanel.add(monthLabel);
+        mainPanel.add(jScrollPane2);
+        mainPanel.add(leftButton);
+        mainPanel.add(rightButton);
+
+        getContentPane().add(mainPanel);
+        pack();
+    }
+
+    private void formatTable() {
+        DefaultTableModel tableModel = (DefaultTableModel) calendar.getModel();
+        tableModel.setColumnCount(7);
+        tableModel.setRowCount(6);
+        tableModel.setColumnIdentifiers(days);
+
+        calendar.setCellSelectionEnabled(true);
+        calendar.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
+        calendar.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        JTableHeader tableHeader = calendar.getTableHeader();
+        tableHeader.setReorderingAllowed(false);
     }
 }
