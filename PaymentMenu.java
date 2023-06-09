@@ -529,6 +529,11 @@ public class PaymentMenu extends JFrame {
 
     private boolean homePhone() {
         String holder = phoneInput.getText();
+        String temp = "";
+        if (holder.startsWith("09")) {
+            temp = holder.substring(2);
+            holder = temp.trim();
+        }
         if (holder.contains(" ")) {
             int spaceCount = 0;
             for (int i = 0; i < holder.length(); i++) {
@@ -539,7 +544,8 @@ public class PaymentMenu extends JFrame {
             if (spaceCount > 1) {
                 return false;
             } else {
-                holder = phoneInput.getText().replaceAll(" ", "");
+                temp = holder.replaceAll(" ", "");
+                holder = temp;
             }
         }
         if (holder.length() != 7) {
@@ -554,13 +560,13 @@ public class PaymentMenu extends JFrame {
         }
 
         if (isDigit) {
-            if (holder.contains(" ")) {
+            if (phoneInput.getText().contains(" ")) {
                 String[] check = phoneInput.getText().split(" ");
 
                 if (check[0].length() != 3 || check[1].length() != 4) {
                     return false;
                 } else {
-                    phoneNumber = "09" + phoneInput.getText();
+                    phoneNumber = "09 " + phoneInput.getText();
                 }
             } else {
                 phoneNumber = "09 " + phoneInput.getText().substring(0, 3) +
@@ -574,24 +580,73 @@ public class PaymentMenu extends JFrame {
     }
 
     private boolean mobilePhone() {
-        if (phoneInput.getText().charAt(0) == '0') {
-            String removeLeadingZero = phoneInput.getText().substring(1);
-            phoneInput.setText(removeLeadingZero);
+        String holder = phoneInput.getText();
+        String temp = "";
+        if (holder.startsWith("+64")) {
+            temp = holder.substring(3);
+        } else if (holder.startsWith("64")) {
+            temp = holder.substring(2);
+        } else {
+            temp = holder;
         }
 
-        if (phoneInput.getText().length() != 9) {
+        if (temp.startsWith("0")) {
+            holder = temp.substring(1);
+        } else {
+            holder = temp;
+        }
+
+        int spaceCount = 0;
+        if (holder.contains(" ")) {
+            for (int i = 0; i < holder.length(); i++) {
+                if (holder.charAt(i) == ' ') {
+                    spaceCount++;
+                }
+            }
+            if (spaceCount > 2) {
+                return false;
+            } else {
+                temp = holder.replaceAll(" ", "");
+            }
+        } else {
+            temp = holder;
+        }
+
+        if (temp.length() != 9) {
             return false;
         }
 
         boolean isDigit = true;
-        for (int i = 0; i < phoneInput.getText().length(); i++) {
-            if (!Character.isDigit(phoneInput.getText().charAt(i))) {
+        for (int i = 0; i < temp.length(); i++) {
+            if (!Character.isDigit(temp.charAt(i))) {
                 isDigit = false;
             }
         }
 
         if (isDigit) {
-            phoneNumber = "+64 " + phoneInput.getText();
+            if (phoneInput.getText().contains(" ")) {
+                String[] check = phoneInput.getText().split(" ");
+                if (spaceCount == 2) {
+                    if (check[0].length() != 2 || check[1].length() != 3 || check[2].length() != 4) {
+                        return false;
+                    } else {
+                        phoneNumber = "+64 " + phoneInput.getText();
+                    }
+                } else if (spaceCount == 1) {
+                    if (check[0].length() != 2 || check[1].length() != 7) {
+                        return false;
+                    } else {
+                        phoneNumber = "+64 " + temp.substring(0,2) + " " +
+                                temp.substring(2,5) + " " +
+                                temp.substring(5);
+                    }
+                }
+            } else {
+                phoneNumber = "+64 " + temp.substring(0,2) + " " +
+                        temp.substring(2,5) + " " +
+                        temp.substring(5);
+            }
+            phoneInput.setText(temp);
         } else {
             return false;
         }
