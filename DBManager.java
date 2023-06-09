@@ -28,7 +28,7 @@ public final class DBManager {
     private final String projectFolderPath;
     private final String databaseFolderPath;
     private final LocalDate currentDate;
-    private ArrayList<Booking> bookingsList;
+    protected ArrayList<Booking> bookingsList;
     private boolean bookingSuccessful;
     private Room room;
     protected Map<String, String> faqMap;

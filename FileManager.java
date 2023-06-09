@@ -31,7 +31,6 @@ public final class FileManager {
     protected int packageIndex;
     protected int momentaryIndex;
     private LocalDate date;
-    private String currentDate;
 
     //Constructs a new FileManager object. Initializes instance variables for storing room details.
     public FileManager() {
@@ -117,8 +116,6 @@ public final class FileManager {
      * to the voucher list.
      */
     public void firstVoucher() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        currentDate = date.format(formatter);
         String fileName = "";
         try {
             String start = "PackageVoucher";
@@ -140,7 +137,7 @@ public final class FileManager {
             bw.write("$200 Gift Voucher for Marl Avenue Hotel\n");
             bw.write("To: " + vouchers.voucherDetails.recipient + "\n");
             bw.write("From: " + vouchers.voucherDetails.giver + "\n");
-            bw.write("Valid till: " + currentDate + "\n");
+            bw.write("Valid till: " + date.getDayOfMonth() + "/" + (date.getYear()+1) + "/" + date.getYear()+1 + "\n");
             bw.write("Find us on www.MarlAvenueHotel.co.nz\n");
             bw.close();
 
@@ -157,10 +154,7 @@ public final class FileManager {
     *of vouchers.
      */
     public void momentaryVoucher() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        currentDate = date.format(formatter);
         String fileName = "";
-        int value = 0;
         try {
             String start = "MomentaryVoucher";
             String end = ".txt";
@@ -178,10 +172,10 @@ public final class FileManager {
                 }
             }
             bw = new BufferedWriter(new FileWriter(new File("./vouchers/" + fileName)));
-            bw.write("Gift Voucher for Marl Avenue with the value of: $" + value + "\n");
+            bw.write("Gift Voucher for Marl Avenue with the value of: $" + vouchers.voucherDetails.amount + "\n");
             bw.write("To: " + vouchers.voucherDetails.recipient + "\n");
             bw.write("From: " + vouchers.voucherDetails.giver + "\n");
-            bw.write("Valid till: " + currentDate + "\n");
+            bw.write("Valid till: " + date.getDayOfMonth() + "/" + date.getMonthValue() + "/" + (date.getYear()+1) + "\n");
             bw.write("Find us on www.MarlAvenueHotel.co.nz\n");
             bw.close();
 

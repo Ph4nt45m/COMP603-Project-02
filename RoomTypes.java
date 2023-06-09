@@ -43,6 +43,13 @@ public class RoomTypes extends JFrame {
     protected BookingDetails bookingDetails;
     protected String selectedRoom;
 
+    //Constructor for Unit Testing - Booking
+    public RoomTypes(Homepage home) {
+        this.homepage = home;
+        this.booking = new BookingMenu(this.homepage);
+        setComponents();
+    }
+    
     /*Constructs a RoomTypes object with the specified Homepage and
      * BookingMenu.
      */

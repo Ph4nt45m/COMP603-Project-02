@@ -56,7 +56,14 @@ public class DiscountMenu extends JFrame {
     protected boolean childDisStatus;
     protected boolean validStudentInput;
     protected boolean validChildInput;
-
+  
+    //Constructor for Unit Testing - Booking
+    public DiscountMenu() {
+        this.homepage = new Homepage();
+        this.bookDetails = new BookingDetails(this.homepage, new RoomTypes(this.homepage));
+        setComponents();
+    }
+  
     /*Constructs a DiscountMenu object with the specified Homepage and BookingDetails objects.
      *Initializes various variables and sets up the UI components.
      */

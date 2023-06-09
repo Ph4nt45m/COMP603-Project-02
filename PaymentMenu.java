@@ -37,25 +37,25 @@ public class PaymentMenu extends JFrame {
     private JButton homeButton;
     private JButton backButton;
     private JLabel firstNameLabel;
-    private JTextField firstNameInput;
-    private JLabel firstNameErrorMsg;
+    protected JTextField firstNameInput;
+    protected JLabel firstNameErrorMsg;
     private JLabel surnameLabel;
-    private JTextField surnameInput;
-    private JLabel surnameErrorMsg;
+    protected JTextField surnameInput;
+    protected JLabel surnameErrorMsg;
     private JLabel phoneLabel;
-    private JComboBox<String> phoneType;
-    private JTextField phoneInput;
-    private JLabel phoneErrorMsg;
+    protected JComboBox<String> phoneType;
+    protected JTextField phoneInput;
+    protected JLabel phoneErrorMsg;
     private JLabel emailLabel;
-    private JTextField emailInput;
-    private JLabel emailErrorMsg;
+    protected JTextField emailInput;
+    protected JLabel emailErrorMsg;
     private JLabel cardTitle;
     private JLabel cardLabel;
-    private JTextField cardInput;
-    private JLabel cardErrorMsg;
+    protected JTextField cardInput;
+    protected JLabel cardErrorMsg;
     private JLabel expiryLabel;
-    private JTextField expiryInput;
-    private JLabel expiryErrorMsg;
+    protected JTextField expiryInput;
+    protected JLabel expiryErrorMsg;
     private JLabel expiryFormatLabel;
     private JButton saveButton;
     private JPanel mainPanel;
@@ -83,6 +83,13 @@ public class PaymentMenu extends JFrame {
     private Booking booking;
     private Room room;
 
+//Constructor for Unit Testing - Booking
+    public PaymentMenu(DiscountMenu discount) {
+        this.discounts = discount;
+        this.homepage = this.discounts.homepage;
+        setComponents();
+    }
+    
     // Constructor for PaymentMenu with Homepage and Vouchers parameters
     public PaymentMenu(Homepage home, Vouchers vouchers) {
         this.homepage = home;
@@ -179,8 +186,15 @@ public class PaymentMenu extends JFrame {
 
     // Handles the action when the home button is clicked
     private void homeButtonAction(ActionEvent evt) {
-        disposeCurrent();
-        returnToHome();
+        if(vouchers == null) {
+            disposeCurrent();
+            returnToHome();
+        } else {
+            vouchers.voucherDetails.dispose();
+            vouchers.dispose();
+            vouchers.homepage.setVisible(true);
+            dispose();
+        }
     }
 
     // Sets up the back button and its action listener
@@ -198,9 +212,14 @@ public class PaymentMenu extends JFrame {
 
     // Handles the action when the back button is clicked
     private void backButtonAction(ActionEvent evt) {
-        discounts.setLocation(((homepage.width / 2) - (discounts.width / 2)), ((homepage.height / 2) - (discounts.height / 2)));
-        discounts.setVisible(true);
-        if (isDisplayable()) {
+        if(vouchers == null) {
+            discounts.setLocation(((homepage.width / 2) - (discounts.width / 2)), ((homepage.height / 2) - (discounts.height / 2)));
+            discounts.setVisible(true);
+            if (isDisplayable()) {
+                dispose();
+            }
+        } else {
+            vouchers.voucherDetails.setVisible(true);
             dispose();
         }
     }

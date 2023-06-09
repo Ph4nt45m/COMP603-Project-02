@@ -53,6 +53,16 @@ public class BookingDetails extends JFrame {
     protected boolean validLDate;
     protected Date dateBooked;
     protected Date dateLeave;
+    
+    //Constructor for Unit Testing - Booking
+    public BookingDetails() {
+        this.homepage = new Homepage();
+        this.roomTypes = new RoomTypes(this.homepage, new BookingMenu(this.homepage));
+        this.datePicker = new DatePicker(this);
+        this.validBDate = false;
+        this.validLDate = false;
+        setComponents();
+    }
 
     // Initialize variables and components
     public BookingDetails(Homepage home, RoomTypes rmTypes) {
@@ -306,7 +316,7 @@ public class BookingDetails extends JFrame {
     }
 
     //Verifies the inputted booking date.
-    private void verifyBookDate() {
+    protected void verifyBookDate() {
         String holder = bDateInput.getText();
         boolean validChars = true;
         validChars = verifyCharacters(holder);

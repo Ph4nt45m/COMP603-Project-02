@@ -9,6 +9,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -29,7 +31,7 @@ public class Vouchers extends JFrame {
 
     protected JRadioButton momentaryRadioButton;
     protected ButtonGroup voucherOptionsGroup;
-    protected String selectedVoucher;
+    public String selectedVoucher;
     private final JPanel mainPanel;
     private JButton returnButton;
     public JRadioButton packageRadioButton;
@@ -82,6 +84,16 @@ public class Vouchers extends JFrame {
 
         getContentPane().add(mainPanel);
         pack();
+        
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                homepage.dbManager.closeConnections();
+
+                dispose();
+                System.exit(0);
+            }
+        });
     }
 
     //Sets up the title label of the JFrame.
@@ -226,15 +238,22 @@ public class Vouchers extends JFrame {
     *selected, displays an error message if not, and retrieves the selected 
     *voucher option and initializes the voucher details.
      */
-    private void continueButtonClicked() {
+    public void continueButtonClicked() {
         if (voucherOptionsGroup.getSelection() == null) {
             JOptionPane.showMessageDialog(this, "Please select a voucher option.");
             return;
         }
 
-        selectedVoucher = voucherOptionsGroup.getSelection().getActionCommand();
-
+        if(voucherOptionsGroup.getSelection() != null) {
+            if(voucherOptionsGroup.getSelection() == packageRadioButton.getModel()) {
+                selectedVoucher = "package";
+            } if(voucherOptionsGroup.getSelection() == momentaryRadioButton.getModel()){
+                selectedVoucher = "momentary";
+            }
+        }
+        
         voucherDetails = new VoucherDetails(this, homepage);
+        setVisible(false);
     }
 
     /*Called when the return button is clicked. It disposes of the current 

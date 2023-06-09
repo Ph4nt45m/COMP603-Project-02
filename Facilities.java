@@ -233,7 +233,8 @@ public class Facilities extends JFrame {
         });
 
         int width = 800;
-        int height = 300;
+        int height = 400;
+
         frame.setSize(width, height);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
@@ -262,7 +263,7 @@ public class Facilities extends JFrame {
 
         if (facilityName.equalsIgnoreCase("Restaurant & Bar")) {
             restaurantMenu = new JButton("Amore Menu");
-            restaurantMenu.setBounds(600, 520, 150, 20);
+            restaurantMenu.setBounds(600, 320, 150, 20);
             restaurantMenu.setFont(new Font("Segoe UI", 0, 12));
             customPanel.add(restaurantMenu);
 
