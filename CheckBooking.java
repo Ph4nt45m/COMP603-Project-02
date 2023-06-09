@@ -58,12 +58,14 @@ public class CheckBooking extends JFrame {
     protected String phone;
     protected String selectedPhoneType;
 
+        //Constructs a CheckBooking object with the specified Homepage and BookingMenu.
     public CheckBooking(Homepage home, BookingMenu bookMenu) {
         this.homepage = home;
         this.bookingMenu = bookMenu;
         setComponents();
     }
 
+        //Sets up the components of the JFrame.
     private void setComponents() {
         homeButton = new JButton();
         backButton = new JButton();
@@ -103,6 +105,7 @@ public class CheckBooking extends JFrame {
         setFrame();
     }
 
+        //Set up the home button.
     private void setHomeButton() {
         homeButton.setText("Homepage");
         homeButton.setBounds(10, 10, 100, 30);
@@ -114,7 +117,8 @@ public class CheckBooking extends JFrame {
             }
         });
     }
-
+    
+    // Action to perform when the home button is clicked
     private void homeButtonAction(ActionEvent evt) {
         if (bookingMenu.isDisplayable()) {
             bookingMenu.dispose();
@@ -127,6 +131,7 @@ public class CheckBooking extends JFrame {
         }
     }
 
+        //Set up the back button.
     private void setBackButton() {
         backButton.setText("Back");
         backButton.setBounds(10, 50, 100, 30);
@@ -138,7 +143,8 @@ public class CheckBooking extends JFrame {
             }
         });
     }
-
+    
+    // Action to perform when the back button is clicked
     private void backButtonAction(ActionEvent evt) {
         bookingMenu.setLocation((homepage.screenWidth / 2) - (bookingMenu.width / 2), ((homepage.screenHeight / 2) - (bookingMenu.height / 2)));
         bookingMenu.setVisible(true);
@@ -146,7 +152,8 @@ public class CheckBooking extends JFrame {
             dispose();
         }
     }
-
+    
+    // Set up the title label
     private void setTitle() {
         title.setFont(new Font("Segoe UI", 0, 24));
         title.setHorizontalAlignment(SwingConstants.CENTER);
@@ -154,6 +161,7 @@ public class CheckBooking extends JFrame {
         title.setBounds(265, 40, 270, 50);
     }
 
+        // Set up the first name label
     private void setFirstNameLabel() {
         firstNameLabel.setFont(new Font("Segoe UI", 0, 18));
         firstNameLabel.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -161,16 +169,19 @@ public class CheckBooking extends JFrame {
         firstNameLabel.setBounds(30, 140, 200, 30);
     }
 
+        // Set up the first name input field
     private void setFirstNameInput() {
         firstNameInput.setFont(new Font("Segoe UI", 0, 17));
         firstNameInput.setBounds(240, 140, 290, 30);
     }
 
+        // Set up the first name error message label
     private void setFirstNameErrMsg() {
         firstNameErrorMsg.setForeground(Color.red);
         firstNameErrorMsg.setBounds(540, 140, 250, 30);
     }
 
+        // Set up the surname label
     private void setSurnameLabel() {
         surnameLabel.setFont(new Font("Segoe UI", 0, 18));
         surnameLabel.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -178,16 +189,19 @@ public class CheckBooking extends JFrame {
         surnameLabel.setBounds(30, 220, 200, 30);
     }
 
+        // Set up the surname input field
     private void setSurnameInput() {
         surnameInput.setFont(new Font("Segoe UI", 0, 17));
         surnameInput.setBounds(240, 220, 290, 30);
     }
 
+        // Set up the surname error message label
     private void setSurnameErrMsg() {
         surnameErrorMsg.setForeground(Color.red);
         surnameErrorMsg.setBounds(540, 220, 250, 30);
     }
 
+        // Set up the phone label
     private void setPhoneLabel() {
         phoneLabel.setFont(new Font("Segoe UI", 0, 18));
         phoneLabel.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -195,22 +209,26 @@ public class CheckBooking extends JFrame {
         phoneLabel.setBounds(30, 300, 200, 30);
     }
 
+        // Set up the phone types combo box
     private void setPhoneTypes() {
         phoneTypes.setFont(new Font("Segoe UI", 0, 12));
         phoneTypes.setModel(new DefaultComboBoxModel<>(phTypes));
         phoneTypes.setBounds(240, 300, 90, 30);
     }
 
+        // Set up the phone input field
     private void setPhoneInput() {
         phoneInput.setFont(new Font("Segoe UI", 0, 17));
         phoneInput.setBounds(330, 300, 200, 30);
     }
 
+        // Set up the phone error message label
     private void setPhoneErrMsg() {
         phoneErrorMsg.setForeground(Color.red);
         phoneErrorMsg.setBounds(540, 300, 250, 30);
     }
 
+        // Set up the find button
     private void setFindButton() {
         findButton.setFont(new Font("Segoe UI", 0, 18));
         findButton.setText("Find");
@@ -223,7 +241,8 @@ public class CheckBooking extends JFrame {
             }
         });
     }
-
+    
+    // Action to perform when the find button is clicked
     private void findButtonAction(ActionEvent evt) {
         firstNameErrorMsg.setText("");
         surnameErrorMsg.setText("");
@@ -248,7 +267,8 @@ public class CheckBooking extends JFrame {
         }
         setResult();
     }
-
+    
+    //Verifies the first name input field. Return true if the first name is valid, false otherwise.
     private boolean verifyFirstName() {
         String trimInput = firstNameInput.getText().trim();
         firstNameInput.setText(trimInput);
@@ -289,7 +309,8 @@ public class CheckBooking extends JFrame {
 
         return true;
     }
-
+    
+    //Verifies the last name input field. Return true if the last name is valid, false otherwise.
     private boolean verifySurname() {
         String trimInput = surnameInput.getText().trim();
         surnameInput.setText(trimInput);
@@ -330,7 +351,8 @@ public class CheckBooking extends JFrame {
 
         return true;
     }
-
+    
+    //Verifies the phone input field based on the selected phone type. Return true if the phone number is valid, false otherwise.
     private boolean verifyPhone() {
         String trimInput = phoneInput.getText().trim();
         phoneInput.setText(trimInput);
@@ -345,7 +367,8 @@ public class CheckBooking extends JFrame {
 
         return valid;
     }
-
+    
+    //Verifies the home phone number input. Return true if the home phone number is valid, false otherwise.
     private boolean homePhone() {
         String holder = phoneInput.getText();
         String temp = "";
@@ -398,6 +421,7 @@ public class CheckBooking extends JFrame {
         return true;
     }
 
+    //Verifies the mobile phone number input. Return true if the mobile phone number is valid, false otherwise.
     private boolean mobilePhone() {
         String holder = phoneInput.getText();
         String temp = "";
@@ -473,6 +497,7 @@ public class CheckBooking extends JFrame {
         return true;
     }
 
+    //Sets the result text based on the search query.
     private void setResult() {
         ArrayList<Booking> found = homepage.dbManager.checkForBooking(firstName, surname, phone);
         String foundBookings = "";
@@ -491,20 +516,23 @@ public class CheckBooking extends JFrame {
 
     }
 
+     // Set up the result text pane
     private void setResultPane() {
         result.setFont(new Font("Segoe UI", 0, 17));
         result.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         result.setEditable(false);
     }
 
+    // Set up the scroll pane for the result pane
     private void setScrollPane() {
         scrollPane.setBounds(150, 450, 500, 250);
         scrollPane.setViewportView(result);
     }
 
+    //Sets the main panel properties.
     private void setMainPanel() {
         mainPanel.setPreferredSize(new Dimension(width, height));
-//        mainPanel.setBackground(Color.WHITE); set color/background
+        mainPanel.setBackground(Color.decode("#fff3e9"));
         mainPanel.setLayout(null);
 
         mainPanel.add(homeButton);
@@ -523,7 +551,8 @@ public class CheckBooking extends JFrame {
         mainPanel.add(findButton);
         mainPanel.add(scrollPane);
     }
-
+    
+    //Sets the frame and properties.
     private void setFrame() {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocation(((homepage.screenWidth / 2) - (width / 2)), ((homepage.screenHeight / 2) - (height / 2)));
