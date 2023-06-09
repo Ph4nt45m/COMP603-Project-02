@@ -230,12 +230,21 @@ public class CheckBooking extends JFrame {
         phoneErrorMsg.setText("");
         if (!firstNameInput.getText().trim().isEmpty()) {
             boolean validFirstName = verifyFirstName();
+            if (!validFirstName) {
+                firstNameErrorMsg.setText("* Invalid input");
+            }
         }
         if (!surnameInput.getText().trim().isEmpty()) {
             boolean validSurname = verifySurname();
+            if (!validSurname) {
+                surnameErrorMsg.setText("* Invalid input");
+            }
         }
         if (!phoneInput.getText().trim().isEmpty()) {
             boolean validPhone = verifyPhone();
+            if (!validPhone) {
+                phoneErrorMsg.setText("* Invalid input");
+            }
         }
         setResult();
     }
@@ -339,6 +348,11 @@ public class CheckBooking extends JFrame {
 
     private boolean homePhone() {
         String holder = phoneInput.getText();
+        String temp = "";
+        if (holder.startsWith("09")) {
+            temp = holder.substring(2);
+            holder = temp.trim();
+        }
         if (holder.contains(" ")) {
             int spaceCount = 0;
             for (int i = 0; i < holder.length(); i++) {
@@ -349,7 +363,8 @@ public class CheckBooking extends JFrame {
             if (spaceCount > 1) {
                 return false;
             } else {
-                holder = phoneInput.getText().replaceAll(" ", "");
+                temp = holder.replaceAll(" ", "");
+                holder = temp;
             }
         }
         if (holder.length() != 7) {
@@ -364,11 +379,17 @@ public class CheckBooking extends JFrame {
         }
 
         if (isDigit) {
-            String[] check = phoneInput.getText().split(" ");
-            if (check[0].length() != 3 || check[1].length() != 4) {
-                return false;
+            if (phoneInput.getText().contains(" ")) {
+                String[] check = phoneInput.getText().split(" ");
+
+                if (check[0].length() != 3 || check[1].length() != 4) {
+                    return false;
+                } else {
+                    phone = "09 " + phoneInput.getText();
+                }
             } else {
-                phone = "09 " + phoneInput.getText();
+                phone = "09 " + phoneInput.getText().substring(0, 3)
+                        + " " + phoneInput.getText().substring(3);
             }
         } else {
             return false;
@@ -378,24 +399,73 @@ public class CheckBooking extends JFrame {
     }
 
     private boolean mobilePhone() {
-        if (phoneInput.getText().charAt(0) == '0') {
-            String removeLeadingZero = phoneInput.getText().substring(1);
-            phoneInput.setText(removeLeadingZero);
+        String holder = phoneInput.getText();
+        String temp = "";
+        if (holder.startsWith("+64")) {
+            temp = holder.substring(3);
+        } else if (holder.startsWith("64")) {
+            temp = holder.substring(2);
+        } else {
+            temp = holder;
         }
 
-        if (phoneInput.getText().length() != 9) {
+        if (temp.startsWith("0")) {
+            holder = temp.substring(1);
+        } else {
+            holder = temp;
+        }
+
+        int spaceCount = 0;
+        if (holder.contains(" ")) {
+            for (int i = 0; i < holder.length(); i++) {
+                if (holder.charAt(i) == ' ') {
+                    spaceCount++;
+                }
+            }
+            if (spaceCount > 2) {
+                return false;
+            } else {
+                temp = holder.replaceAll(" ", "");
+            }
+        } else {
+            temp = holder;
+        }
+
+        if (temp.length() != 9) {
             return false;
         }
 
         boolean isDigit = true;
-        for (int i = 0; i < phoneInput.getText().length(); i++) {
-            if (!Character.isDigit(phoneInput.getText().charAt(i))) {
+        for (int i = 0; i < temp.length(); i++) {
+            if (!Character.isDigit(temp.charAt(i))) {
                 isDigit = false;
             }
         }
 
         if (isDigit) {
-            phone = "+64 " + phoneInput.getText();
+            if (phoneInput.getText().contains(" ")) {
+                String[] check = phoneInput.getText().split(" ");
+                if (spaceCount == 2) {
+                    if (check[0].length() != 2 || check[1].length() != 3 || check[2].length() != 4) {
+                        return false;
+                    } else {
+                        phone = "+64 " + phoneInput.getText();
+                    }
+                } else if (spaceCount == 1) {
+                    if (check[0].length() != 2 || check[1].length() != 7) {
+                        return false;
+                    } else {
+                        phone = "+64 " + temp.substring(0,2) + " " +
+                                temp.substring(2,5) + " " +
+                                temp.substring(5);
+                    }
+                }
+            } else {
+                phone = "+64 " + temp.substring(0,2) + " " +
+                        temp.substring(2,5) + " " +
+                        temp.substring(5);
+            }
+            phoneInput.setText(temp);
         } else {
             return false;
         }
@@ -410,8 +480,11 @@ public class CheckBooking extends JFrame {
             for (Booking token : found) {
                 foundBookings += token.toString();
             }
-            
+
             result.setText(foundBookings);
+            firstName = "";
+            surname = "";
+            phone = "";
         } else {
             result.setText("No results found.");
         }
