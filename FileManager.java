@@ -30,8 +30,8 @@ public final class FileManager {
     protected Vouchers vouchers;
     protected int packageIndex;
     protected int momentaryIndex;
-    protected LocalDate date;
-    String currentDate;
+    private LocalDate date;
+    private String currentDate;
 
     public FileManager() {
         this.singleRoomDetails = "";
@@ -101,7 +101,7 @@ public final class FileManager {
             }
         }
     }
-    
+
     public void firstVoucher() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         currentDate = date.format(formatter);
