@@ -4,13 +4,21 @@
  */
 package Project_02;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
@@ -20,46 +28,35 @@ import javax.swing.JTextPane;
  */
 public class Facilities extends JFrame {
 
+    private JButton returnButton;
+    private JLabel titleLabel;
+    private JLabel descriptionLabel;
+    private JButton wifi;
+    private JButton restaurantBar;
+    private JButton restaurantMenu;
+    private JButton concierge;
+    private JButton sauna;
+    private JButton fitness;
+    private JButton laundry;
+    private JButton pool;
+    private JButton conference;
+    private JPanel mainPanel;
+
     Homepage homepage;
-    JPanel mainPanel;
-    JButton returnButton;
-    JButton backButton;
-    Facilities facilities;
 
     public Facilities(Homepage home) {
-        mainPanel = new JPanel();
-        mainPanel.setLayout(null);
-        mainPanel.setPreferredSize(new Dimension(550, 550));
-
-        setResizable(false);
         this.homepage = home;
-
         menu();
-        pack();
-
-        setVisible(true);
-
-        returnButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                homepageButton(e);
-            }
-        });
-
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                goingBackButton(e);
-            }
-        });
     }
 
+    //Sets up the menu of the JFrame by calling various helper methods.
     private void menu() {
-        setTitle("Facilities");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        titleLabel = new JLabel();
+        descriptionLabel = new JLabel();
+        mainPanel = new JPanel();
 
-        title();
         returnToHomepage();
+        title();
         faciltiesTitle();
         wifiButton();
         restaurantButton();
@@ -69,111 +66,99 @@ public class Facilities extends JFrame {
         laundryButton();
         swimmingPoolButton();
         conferenceButton();
-
-        getContentPane().add(mainPanel);
-        pack();
+        setMainPanel();
+        setFrame();
     }
 
+    /*Adds a return button to the main panel with the text "Return to Homepage" 
+    *and sets its position.
+     */
+    private void returnToHomepage() {
+        returnButton = new JButton("Return to Homepage");
+        returnButton.setBounds(10, 40, 150, 20);
+
+        returnButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                homepageButton(e);
+            }
+        });
+
+        mainPanel.add(returnButton);
+    }
+
+    /*Action performed when the homepage button is clicked. Disposes of the
+    *current frame and makes the homepage frame visible.
+     */
+    private void homepageButton(ActionEvent event) {
+        homepage.setVisible(true);
+        this.dispose();
+    }
+
+    //Sets up the title label of the JFrame.
     private void title() {
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-
-        JLabel titleLabel = new JLabel("Marl Avenue Hotel");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        titleLabel.setText("Marl Avenue Hotel");
         titleLabel.setBounds(20, 10, 200, 30);
-
-        mainPanel.add(titleLabel);
     }
 
+    //Sets the title label of the topic.
     private void faciltiesTitle() {
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-
-        JLabel descriptionLabel = new JLabel("Facilities:");
-        descriptionLabel.setFont(new Font("Arial", Font.BOLD, 25));
+        descriptionLabel.setFont(new Font("Segoe UI", Font.BOLD, 25));
+        descriptionLabel.setText("Facilities:");
         descriptionLabel.setBounds(220, 50, 300, 50);
-
-        mainPanel.add(descriptionLabel);
     }
 
+    //Sets the WIFI facility name and information in the button and sets the bounds.
     private void wifiButton() {
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
+        wifi = createButton("WIFI", "You have chosen WIFI.\n\n"
+                + "Keep productive whilst staying at Marl Avenue Hotel, with unlimited Wi-Fi in all areas of the hotel. "
+                + "The Business Centre offers guests 24-hour access to a range of facilities and services including computers, "
+                + "printers, and photocopying, as well as courier and secretarial services.");
 
-//        JButton wifi = createButton("WIFI", "You have chosen WIFI.\n\n"
-//                + "Keep productive whilst staying at Marl Avenue Hotel, with unlimited Wi-Fi in all areas of the hotel. "
-//                + "The Business Centre offers guests 24-hour access to a range of facilities and services including computers, "
-//                + "printers, and photocopying, as well as courier and secretarial services.");
-
-    JButton wifi = new JButton();
-    wifi.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            createPanel("WIFI", "You have chosen WIFI.\n\n" + 
-                    "Keep productive whilst staying at Marl Avenue Hotel, with unlimited Wi-Fi in all areas of the hotel. " +
-                    "The Business Centre offers guests 24-hour access to a range of facilities and services including computers, " +
-                    "printers, and photocopying, as well as courier and secretarial services.");
-            dispose();
-        }
-    });
         wifi.setBounds(205, 110, 150, 40);
-
-        mainPanel.add(wifi);
     }
 
+    //Sets the restaurant facility name and information in the button and sets the bounds.
     private void restaurantButton() {
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-
-        JButton restaurantBar = createButton("Restaurant & Bar", "You have chosen Restaurant & Bar.\n\n"
+        restaurantBar = createButton("Restaurant & Bar", "You have chosen Restaurant & Bar.\n\n"
                 + "Whether you are a guest at Marl Avenue Hotel or out for a day in the central city, stop by our in-house Amore Restaurant. "
                 + "The restaurant is located on Level 4 and is open daily 12:00pm - 3:00pm for Lunch and then from 5:00pm - 10.00 pm for Dinner.");
-        restaurantBar.setBounds(205, 160, 150, 40);
 
-        mainPanel.add(restaurantBar);
+        restaurantBar.setBounds(205, 160, 150, 40);
     }
 
+    //Sets the concierge facility name and information in the button and sets the bounds.
     private void conciergeButton() {
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-
-        JButton concierge = createButton("Concierge", "You have chosen Concierge.\n\n"
+        concierge = createButton("Concierge", "You have chosen Concierge.\n\n"
                 + "If you are looking to explore Auckland and want to know the best places to visit, book local\n"
                 + "attractions, eat at the best restaurants in Auckland CBD or any other local recommendation,\n"
                 + "get in touch with our Concierge team, located in the hotel lobby.");
+
         concierge.setBounds(205, 210, 150, 40);
-
-        mainPanel.add(concierge);
     }
 
+    //Sets the sauna facility name and information in the button and sets the bounds.
     private void saunaButton() {
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-
-        JButton sauna = createButton("Sauna", "You have chosen Sauna.\n\n"
+        sauna = createButton("Sauna", "You have chosen Sauna.\n\n"
                 + "A sauna to relax in after your training session.\n");
-        sauna.setBounds(205, 260, 150, 40);
 
-        mainPanel.add(sauna);
+        sauna.setBounds(205, 260, 150, 40);
     }
 
+    //Sets the fitness facility name and information in the button and sets the bounds.
     private void fitnessButton() {
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-
-        JButton fitness = createButton("Fitness Center", "You have chosen Fitness Center.\n\n"
+        fitness = createButton("Fitness Center", "You have chosen Fitness Center.\n\n"
                 + "Stay active with our fitness facilities, designed to work around your\n"
                 + "schedule. Our fitness centre operates 24/7, accessed via your room card.\n"
                 + "It features bikes, treadmills and basic training machines, with extra towels available.");
-        fitness.setBounds(205, 310, 150, 40);
 
-        mainPanel.add(fitness);
+        fitness.setBounds(205, 310, 150, 40);
     }
 
+    //Sets the ;aundry facility name and information in the button and sets the bounds.
     private void laundryButton() {
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-
-        JButton laundry = createButton("Laundry Services",
+        laundry = createButton("Laundry Services",
                 "You have chosen the Laundry Service.\n\n"
                 + "Marl Avenue Hotel has on-site laundry facilities available "
                 + "for guests.\n"
@@ -184,16 +169,13 @@ public class Facilities extends JFrame {
                 + "garments are treated with care and are ready for you on "
                 + "time. Service charges apply, with weekend\n"
                 + "surcharges.");
-        laundry.setBounds(205, 360, 150, 40);
 
-        mainPanel.add(laundry);
+        laundry.setBounds(205, 360, 150, 40);
     }
 
+    //Sets the pool facility name and information in the button and sets the bounds.
     private void swimmingPoolButton() {
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-
-        JButton pool = createButton("Swimming Pools",
+        pool = createButton("Swimming Pools",
                 "You have chosen the Indoor & Outdoor Swimming Pool.\n"
                 + "We have two outdoor swimming pools, one located in the first "
                 + "floor accompanied by a terrace. Our other\n"
@@ -202,16 +184,13 @@ public class Facilities extends JFrame {
                 + "8:00 am - 10:00 pm. Our indoor swimming pool is also on the "
                 + "same floor as the Fitness Center, floor 12.\n"
                 + "Open 24/7.");
-        pool.setBounds(205, 410, 150, 40);
 
-        mainPanel.add(pool);
+        pool.setBounds(205, 410, 150, 40);
     }
 
+    //Sets the conference room facility name and information in the button and sets the bounds.
     private void conferenceButton() {
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-
-        JButton conference = createButton("Conference Rooms", "You have chosen the Conference/Meeting Rooms.\n\n"
+        conference = createButton("Conference Rooms", "You have chosen the Conference/Meeting Rooms.\n\n"
                 + "Leave a lasting impression on your guests with our venues modern interiors, floor to ceiling windows,\n"
                 + "delicious catering, and relaxing outdoor space. Our conference venue is highly versatile and can be\n"
                 + "configured in multiple ways, so whether you are hosting a small business meeting or networking event,\n"
@@ -221,101 +200,166 @@ public class Facilities extends JFrame {
                 + "to ensure everything runs smoothly.");
 
         conference.setBounds(205, 460, 150, 40);
-        mainPanel.add(conference);
     }
 
-    private JButton createButton(String buttonText, final String information) {
+    // Creates a JButton with the specified text and information.
+    private JButton createButton(String buttonText, String information) {
         JButton button = new JButton(buttonText);
+
         button.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 createPanel(buttonText, information);
             }
         });
+
         return button;
     }
 
+    /*Creates a panel to display facility information and name. But if it's the
+    *restaurant, it adds a button for the Amore restaurant.
+    */
     private void createPanel(String facilityName, String information) {
         JFrame frame = new JFrame();
+        frame.setBackground(Color.decode("#fff3e9"));
         frame.setTitle(facilityName);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                frame.dispose();
+            }
+        });
+
         int width = 800;
-        int height = 600;
+        int height = 400;
         frame.setSize(width, height);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
 
         JPanel customPanel = new JPanel();
         customPanel.setLayout(null);
+        customPanel.setBackground(Color.decode("#fff3e9"));
 
-        // Title
-        JLabel titleLabel = new JLabel("Marl Avenue Hotel");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        titleLabel.setBounds(20, 10, 200, 30);
-        customPanel.add(titleLabel);
+        JLabel hotelTitleLabel = new JLabel("Marl Avenue Hotel");
+        hotelTitleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        hotelTitleLabel.setBounds(20, 10, 200, 30);
 
         JLabel facilityLabel = new JLabel(facilityName);
-        facilityLabel.setFont(new Font("Arial", Font.BOLD, 21));
-        facilityLabel.setBounds(380, 40, 300, 30);
-        customPanel.add(titleLabel);
+        facilityLabel.setFont(new Font("Segoe UI", Font.BOLD, 21));
+        facilityLabel.setBounds(340, 40, 300, 30);
 
         JTextPane customTextPane = new JTextPane();
         customTextPane.setText(information);
-        customTextPane.setFont(new Font("Arial", Font.PLAIN, 15));
+        customTextPane.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         customTextPane.setEditable(false);
         customTextPane.setBounds(20, 100, 740, 200);
 
-        // Back Button
-        JButton backButton = new JButton("Back");
-        backButton.setBounds(20, 70, 150, 20);
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose(); // Close the current panel/frame
-                facilities.setVisible(true); // Show the previous facilities panel
-            }
-        });
-        customPanel.add(backButton);
-
-        returnButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                homepageButton(e);
-            }
-        });
-
+        customPanel.add(hotelTitleLabel);
         customPanel.add(facilityLabel);
-        customPanel.add(titleLabel);
         customPanel.add(customTextPane);
-        customPanel.add(returnButton);
-        goBack();
-        frame.add(customPanel);
+
+        if (facilityName.equalsIgnoreCase("Restaurant & Bar")) {
+            restaurantMenu = new JButton("Amore Menu");
+            restaurantMenu.setBounds(600, 320, 150, 20);
+            restaurantMenu.setFont(new Font("Segoe UI", 0, 12));
+            customPanel.add(restaurantMenu);
+
+            restaurantMenu.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String filePath = "./resources/Menu.txt";
+                    String menuContent = readMenuFile(filePath);
+                    if (menuContent != null) {
+                        JFrame menuFrame = new JFrame();
+                        menuFrame.setTitle("Amore Menu");
+                        menuFrame.setSize(800, 600);
+                        menuFrame.setLocationRelativeTo(null);
+                        menuFrame.setResizable(false);
+                        menuFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+                        menuFrame.addWindowListener(new WindowAdapter() {
+                            @Override
+                            public void windowClosing(WindowEvent e) {
+                                menuFrame.dispose();
+                            }
+                        });
+
+                        JTextPane menuTextPane = new JTextPane();
+                        menuTextPane.setText(menuContent);
+                        menuTextPane.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+                        menuTextPane.setEditable(false);
+                        menuTextPane.setBounds(20, 100, 740, 400);
+                        menuFrame.add(menuTextPane);
+
+                        menuFrame.setVisible(true);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error reading the menu file.");
+                    }
+                }
+            });
+        }
+
+        frame.getContentPane().add(customPanel);
         frame.setVisible(true);
     }
 
-    private void returnToHomepage() {
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
+    private String readMenuFile(String filePath) {
+        try {
+            File file = new File(filePath);
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            StringBuilder menuContent = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                menuContent.append(line).append("\n");
+            }
+            reader.close();
+            return menuContent.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-        returnButton = new JButton("Return to Homepage");
-        returnButton.setBounds(20, 40, 150, 20);
+    //Adds the components to the main panel.
+    private void setMainPanel() {
+        mainPanel.setPreferredSize(new Dimension(550, 550));
+        mainPanel.setLayout(null);
+
         mainPanel.add(returnButton);
+        mainPanel.add(titleLabel);
+        mainPanel.add(descriptionLabel);
+        mainPanel.add(wifi);
+        mainPanel.add(restaurantBar);
+        mainPanel.add(concierge);
+        mainPanel.add(sauna);
+        mainPanel.add(fitness);
+        mainPanel.add(laundry);
+        mainPanel.add(pool);
+        mainPanel.add(conference);
     }
 
-    private void goBack() {
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
+    //Sets the frame options like title, size, etc.
+    private void setFrame() {
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        mainPanel.setBackground(Color.decode("#fff3e9"));
+        setTitle("Facilities");
+        setResizable(false);
+        getContentPane().add(mainPanel);
+        pack();
 
-        backButton = new JButton("Back");
-        backButton.setBounds(20, 70, 150, 20);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                homepage.dbManager.closeConnections();
+
+                dispose();
+                System.exit(0);
+            }
+        });
+
+        setVisible(true);
     }
-
-    private void homepageButton(ActionEvent event) {
-        this.dispose();
-        homepage.setVisible(true);
-    }
-
-    private void goingBackButton(ActionEvent event) {
-        this.dispose();
-        facilities.setVisible(true);
-    }
-
 }

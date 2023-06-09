@@ -6,53 +6,37 @@ package Project_02;
 
 /**
  *
- * @author snipi
+ * @author m4ria
  */
 public class FamilyRoom extends Room {
 
-    private boolean isFamily;
-    
-    public FamilyRoom(boolean isFamily) {
-        super("Family Room", false, 350.00);
-        this.isFamily = isFamily;
+    private boolean hasChildren;
+
+    //Constructs a new FamilyRoom object.
+    public FamilyRoom() {
+        super("Family Room", 350.00);
+        this.hasChildren = false;
     }
 
-    public boolean isFamily() {
-        return isFamily;
-    }
-
-    public void setIsFamily(boolean isFamily) {
-        this.isFamily = isFamily;
-    }
-    
+    //Calculates the cost of the family room based on whether it has children or not.
     @Override
     public double calculateCost() {
-        if (isFamily()) {
+        if (hasChildren()) {
             this.setCost(this.cost * 0.75);
         }
 
         return this.cost;
     }
-    
+
+    //Checks if the family room has children.
     @Override
-    public String getStudentStatus() {
-        return "No";
+    public boolean hasChildren() {
+        return hasChildren;
     }
-    
+
+    //Sets the status of whether the family room has children or not.
     @Override
-    public String getChildStatus() {
-        return "No";
-    }
-    
-    @Override
-    public String getFamilyStatus() {
-        String status = "";
-        if (this.isFamily()) {
-            status = "Yes";
-        } else {
-            status = "No";
-        }
-        
-        return status;
+    public void setHasChildren(boolean hasChildren) {
+        this.hasChildren = hasChildren;
     }
 }

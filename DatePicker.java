@@ -16,7 +16,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -34,39 +33,40 @@ import javax.swing.table.JTableHeader;
 
 /**
  *
- * @author snipi
+ * @author m4ria
  */
 public class DatePicker extends JFrame {
 
-    JPanel mainPanel = new JPanel();
-    JScrollPane jScrollPane2 = new JScrollPane();
-    JTable calendar = new JTable();
-    JLabel monthLabel = new JLabel();
-    JButton leftButton = new JButton();
-    JButton rightButton = new JButton();
-    JLabel yearLabel = new JLabel();
+    private JPanel mainPanel;
+    private JLabel yearLabel;
+    private JLabel monthLabel;
+    private JTable calendar;
+    private JScrollPane jScrollPane2;
+    private JButton leftButton;
+    private JButton rightButton;
 
-    final String[] months = {"January", "February", "March", "April", "May", "June", "July",
+    private final String[] months = {"January", "February", "March", "April", "May", "June", "July",
         "August", "September", "October", "November", "December"};
-    int monthIndex;
-    int currentMonthIndex;
-    int yearIndex;
-    int yearLimit;
-    final String[] days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
-    LocalDate date;
-    DateTimeFormatter formatter;
-    String currentDate;
-    int day;
-    int month;
-    int year;
-    String selectedDate;
-    Integer selectedDay;
-    Integer selectedMonth;
-    Integer selectedYear;
-    BookingDetails userDetails;
-    ImageIcon left;
-    ImageIcon right;
+    private int monthIndex;
+    private int currentMonthIndex;
+    private int yearIndex;
+    private int yearLimit;
+    private final String[] days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+    private LocalDate date;
+    private DateTimeFormatter formatter;
+    protected String currentDate;
+    protected int day;
+    protected int month;
+    protected int year;
+    private String selectedDate;
+    private Integer selectedDay;
+    private Integer selectedMonth;
+    private Integer selectedYear;
+    private BookingDetails userDetails;
+    private ImageIcon left;
+    private ImageIcon right;
 
+    // Constructor for the DatePicker class. Initializes the date picker with the current date and sets up necessary variables and components.
     public DatePicker(BookingDetails usersDetails) {
         this.date = LocalDate.now();
         this.formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -85,35 +85,10 @@ public class DatePicker extends JFrame {
         this.left = new ImageIcon("./resources/Left.png");
         this.right = new ImageIcon("./resources/Right.png");
         setComponents();
-        DefaultTableModel tableModel = (DefaultTableModel) calendar.getModel();
-        tableModel.setColumnCount(7);
-        tableModel.setRowCount(6);
-        tableModel.setColumnIdentifiers(days);
-
-        calendar.setCellSelectionEnabled(true);
-        calendar.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
-        calendar.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        JTableHeader tableHeader = calendar.getTableHeader();
-        tableHeader.setReorderingAllowed(false);
-
-        monthLabel.setText(months[monthIndex]);
-        yearLabel.setText(this.yearIndex + "");
-
-        leftButton.setIcon(left);
-        leftButton.setEnabled(false);
-        rightButton.setIcon(right);
-
         updateCalendar();
-
-        calendar.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                getSelectedDate();
-            }
-        });
     }
 
+    // CustomTableCellRenderer is a nested class that extends DefaultTableCellRenderer.
     class CustomTableCellRenderer extends DefaultTableCellRenderer {
 
         @Override
@@ -124,19 +99,12 @@ public class DatePicker extends JFrame {
                     false, false, row, column);
 
             cell.setBackground(table.getBackground());
-            cell.setForeground(table.getForeground());
 
-//            if (isSelected) {
-//                cell.setBackground(table.getSelectionBackground());
-//                cell.setForeground(table.getSelectionForeground());
-//            } else {
-//                cell.setBackground(table.getBackground());
-//                cell.setForeground(table.getForeground());
-//            }
             return cell;
         }
     }
 
+    // Decrements the currently displayed month by one. Updates the calendar display accordingly.
     private void decrementMonth() {
         if (monthIndex > 0 || (monthIndex == 0 && yearIndex > year)) {
             if (monthIndex == 0 && yearIndex > year) {
@@ -165,6 +133,7 @@ public class DatePicker extends JFrame {
         updateCalendar();
     }
 
+    // Increments the currently displayed month by one. Updates the calendar display accordingly.
     private void incrementMonth() {
         if (monthIndex < months.length - 1 || (monthIndex == months.length - 1 && yearIndex < yearLimit)) {
             if (monthIndex == months.length - 1 && yearIndex < yearLimit) {
@@ -193,6 +162,7 @@ public class DatePicker extends JFrame {
         updateCalendar();
     }
 
+    // Updates the calendar table with the dates for the currently displayed month and year.
     private void updateCalendar() {
         LocalDate firstDayOfMonth = LocalDate.of(yearIndex, monthIndex + 1, 1);
         DayOfWeek dayOfWeek = firstDayOfMonth.getDayOfWeek();
@@ -220,6 +190,9 @@ public class DatePicker extends JFrame {
         }
     }
 
+    /*Retrieves the selected date from the calendar table.
+    * Formats the selected date and updates the associated BookingDetails object.
+     */
     private void getSelectedDate() {
         int selectedRow = calendar.getSelectedRow();
         int selectedColumn = calendar.getSelectedColumn();
@@ -251,22 +224,83 @@ public class DatePicker extends JFrame {
         }
     }
 
+    // Sets up the main components of the date picker, including panels, labels, buttons, and the calendar table.
     private void setComponents() {
+        mainPanel = new JPanel();
+        yearLabel = new JLabel();
+        monthLabel = new JLabel();
+        calendar = new JTable();
+        jScrollPane2 = new JScrollPane();
+        leftButton = new JButton();
+        rightButton = new JButton();
 
+        setFrame();
+        setCalendar();
+        setYearLabel();
+        setMonthLabel();
+        setLeftButton();
+        setRightButton();
+        setMainPanel();
+        formatTable();
+    }
+
+    // Event handler for the left button.
+    // Decrements the displayed month when the button is clicked.
+    private void leftButtonActionPerformed(ActionEvent evt) {
+        decrementMonth();
+    }
+
+    // Event handler for the right button.
+    // Increments the displayed month when the button is clicked.
+    private void rightButtonActionPerformed(ActionEvent evt) {
+        incrementMonth();
+    }
+
+    // Configures the frame settings for the date picker.
+    private void setFrame() {
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setAlwaysOnTop(true);
         setAutoRequestFocus(false);
         setUndecorated(true);
+    }
 
-        mainPanel.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-
+    // Configures the calendar table and its associated scroll pane.
+    private void setCalendar() {
         calendar.setRowHeight(30);
         calendar.setShowHorizontalLines(true);
         calendar.setShowVerticalLines(true);
         jScrollPane2.setViewportView(calendar);
+        jScrollPane2.setBounds(5, 100, 300, 208);
 
+        calendar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                getSelectedDate();
+            }
+        });
+    }
+
+    // Configures the label displaying the current year.
+    private void setYearLabel() {
+        yearLabel.setFont(new Font("Segoe UI", 0, 18));
+        yearLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        yearLabel.setText(this.yearIndex + "");
+        yearLabel.setBounds(116, 10, 80, 30);
+    }
+
+    // Configures the label displaying the current month.
+    private void setMonthLabel() {
         monthLabel.setFont(new Font("Segoe UI", 0, 18));
         monthLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        monthLabel.setText(months[monthIndex]);
+        monthLabel.setBounds(70, 45, 160, 40);
+    }
+
+    // Configures the left button and sets up its event handler.
+    private void setLeftButton() {
+        leftButton.setBounds(30, 50, 31, 37);
+        leftButton.setIcon(left);
+        leftButton.setEnabled(false);
 
         leftButton.addActionListener(new ActionListener() {
             @Override
@@ -274,6 +308,12 @@ public class DatePicker extends JFrame {
                 leftButtonActionPerformed(e);
             }
         });
+    }
+
+    // Configures the right button and sets up its event handler.
+    private void setRightButton() {
+        rightButton.setBounds(245, 50, 31, 37);
+        rightButton.setIcon(right);
 
         rightButton.addActionListener(new ActionListener() {
             @Override
@@ -281,37 +321,36 @@ public class DatePicker extends JFrame {
                 rightButtonActionPerformed(e);
             }
         });
+    }
 
-        yearLabel.setFont(new Font("Segoe UI", 0, 18));
-        yearLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
+    // Configures the main panel and adds all components to it.
+    private void setMainPanel() {
+        mainPanel.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         mainPanel.setLayout(null);
-
-        yearLabel.setBounds(116, 10, 80, 30);
-
-        leftButton.setBounds(30, 50, 31, 37);
-        monthLabel.setBounds(70, 45, 160, 40);
-        rightButton.setBounds(245, 50, 31, 37);
-
-        jScrollPane2.setBounds(5, 100, 300, 208);
+        mainPanel.setPreferredSize(new Dimension(310, 315));
 
         mainPanel.add(yearLabel);
-        mainPanel.add(leftButton);
         mainPanel.add(monthLabel);
-        mainPanel.add(rightButton);
         mainPanel.add(jScrollPane2);
+        mainPanel.add(leftButton);
+        mainPanel.add(rightButton);
 
-        mainPanel.setPreferredSize(new Dimension(310, 315));
         getContentPane().add(mainPanel);
-
         pack();
     }
 
-    private void leftButtonActionPerformed(ActionEvent evt) {
-        decrementMonth();
-    }
+    // Configures the formatting and behavior of the calendar table.
+    private void formatTable() {
+        DefaultTableModel tableModel = (DefaultTableModel) calendar.getModel();
+        tableModel.setColumnCount(7);
+        tableModel.setRowCount(6);
+        tableModel.setColumnIdentifiers(days);
 
-    private void rightButtonActionPerformed(ActionEvent evt) {
-        incrementMonth();
+        calendar.setCellSelectionEnabled(true);
+        calendar.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
+        calendar.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        JTableHeader tableHeader = calendar.getTableHeader();
+        tableHeader.setReorderingAllowed(false);
     }
 }

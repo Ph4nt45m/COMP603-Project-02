@@ -3,10 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Project_02;
-
+    
 /**
  *
- * @author snipi
+ * @author m4ria
  */
 public class RunSystem {
 

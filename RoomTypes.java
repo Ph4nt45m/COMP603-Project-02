@@ -4,6 +4,7 @@
  */
 package Project_02;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -21,7 +22,7 @@ import javax.swing.WindowConstants;
 
 /**
  *
- * @author snipi
+ * @author m4ria
  */
 public class RoomTypes extends JFrame {
 
@@ -41,16 +42,26 @@ public class RoomTypes extends JFrame {
     protected RoomDetails roomDetails;
     protected BookingDetails bookingDetails;
     protected String selectedRoom;
-    protected Room room;
 
+    //Constructor for Unit Testing - Booking
+    public RoomTypes(Homepage home) {
+        this.homepage = home;
+        this.booking = new BookingMenu(this.homepage);
+        setComponents();
+    }
+    
+    /*Constructs a RoomTypes object with the specified Homepage and
+     * BookingMenu.
+     */
     public RoomTypes(Homepage home, BookingMenu bookingMenu) {
         this.homepage = home;
         this.booking = bookingMenu;
-        
+
         setLocation(((homepage.screenWidth / 2) - (width / 2)), (((homepage.screenHeight / 6) * 2) - (height / 2)));
         setComponents();
     }
 
+    //Sets up the UI components for the Room Types window.
     private void setComponents() {
         roomTypesTitle = new JLabel();
         homeButton = new JButton();
@@ -70,6 +81,7 @@ public class RoomTypes extends JFrame {
         setFrame();
     }
 
+    //Sets up the homepage button
     private void setHomeButton() {
         homeButton.setText("Homepage");
         homeButton.setBounds(10, 10, 100, 30);
@@ -82,6 +94,9 @@ public class RoomTypes extends JFrame {
         });
     }
 
+    /*Action performed when the homepage button is clicked. Disposes of the
+    *current frame and makes the homepage frame visible.
+     */
     private void homeButtonAction(ActionEvent evt) {
         if (booking.isDisplayable()) {
             booking.dispose();
@@ -97,6 +112,9 @@ public class RoomTypes extends JFrame {
         }
     }
 
+    /*Action performed when the back button is clicked. Disposes of the
+    *current frame and makes the Booking frame visible.
+     */
     private void setBackButton() {
         backButton.setText("Back");
         backButton.setBounds(10, 50, 100, 30);
@@ -109,11 +127,14 @@ public class RoomTypes extends JFrame {
         });
     }
 
+    /*Action performed when the back button is clicked. Disposes of the current 
+    *frame and makes the booking frame visible.
+     */
     private void backButtonAction(ActionEvent evt) {
         if (roomDetails.isDisplayable()) {
             roomDetails.dispose();
         }
-        
+
         booking.setLocation(((homepage.screenWidth / 2) - (booking.width / 2)), ((homepage.screenHeight / 2) - (booking.height / 2)));
         booking.setVisible(true);
         if (isDisplayable()) {
@@ -121,6 +142,7 @@ public class RoomTypes extends JFrame {
         }
     }
 
+    //Sets up the title label of the JFrame.
     private void setTitle() {
         roomTypesTitle.setFont(new Font("Segoe UI", 0, 24));
         roomTypesTitle.setHorizontalAlignment(SwingConstants.CENTER);
@@ -128,6 +150,7 @@ public class RoomTypes extends JFrame {
         roomTypesTitle.setBounds(255, 50, 142, 30);
     }
 
+    //Sets up the title label of the panel.
     private void setRoomTypesLabel() {
         roomTypesLabel.setFont(new Font("Segoe UI", 0, 17));
         roomTypesLabel.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -135,6 +158,7 @@ public class RoomTypes extends JFrame {
         roomTypesLabel.setBounds(150, 175, 100, 30);
     }
 
+    //Sets up the dropdown list for selecting room types.
     private void setRoomTypes() {
         roomTypes.setFont(new Font("Segoe UI", 0, 17));
         roomTypes.setModel(new DefaultComboBoxModel<>(roomNameTypes));
@@ -151,6 +175,7 @@ public class RoomTypes extends JFrame {
         });
     }
 
+    //Action performed when a room type is selected from the dropdown list.
     private void roomTypesAction(ActionEvent evt) {
         if (roomDetails != null) {
             roomDetails.dispose();
@@ -160,6 +185,7 @@ public class RoomTypes extends JFrame {
         roomDetails.setVisible(true);
     }
 
+    //Sets up the Select button
     private void setSelectButton() {
         selectButton.setText("Select");
         selectButton.setBounds(275, 240, 90, 30);
@@ -172,29 +198,18 @@ public class RoomTypes extends JFrame {
         });
     }
 
+    //Action performed when the Select button is clicked.
     private void selectRoomAction(ActionEvent evt) {
-        makeRoom();
         bookingDetails = new BookingDetails(homepage, this);
         setVisible(false);
         roomDetails.setVisible(false);
     }
-    
-    private void makeRoom() {
-        if (selectedRoom.contains("Single")) {
-            room = new SingleRoom();
-        } else if (selectedRoom.contains("Double")) {
-            room = new DoubleRoom();
-        } else if (selectedRoom.contains("Family")) {
-            room = new FamilyRoom();
-        } else if (selectedRoom.contains("Group")) {
-            room = new GroupRoom();
-        }
-    }
 
+    //Sets up the main panel of the window.
     private void setMainPanel() {
         mainPanel.setPreferredSize(new Dimension(width, height));
         mainPanel.setLayout(null);
-        
+
         mainPanel.add(roomTypesTitle);
         mainPanel.add(homeButton);
         mainPanel.add(backButton);
@@ -202,13 +217,15 @@ public class RoomTypes extends JFrame {
         mainPanel.add(roomTypes);
         mainPanel.add(selectButton);
     }
-    
+
+    //Sets up the frame properties and displays the window.
     private void setFrame() {
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
+        mainPanel.setBackground(Color.decode("#fff3e9"));
         getContentPane().add(mainPanel);
         pack();
-        
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -218,7 +235,7 @@ public class RoomTypes extends JFrame {
                 System.exit(0);
             }
         });
-        
+
         setVisible(true);
     }
 }
