@@ -55,9 +55,9 @@ public class DatePicker extends JFrame {
     private LocalDate date;
     private DateTimeFormatter formatter;
     protected String currentDate;
-    private int day;
-    private int month;
-    private int year;
+    protected int day;
+    protected int month;
+    protected int year;
     private String selectedDate;
     private Integer selectedDay;
     private Integer selectedMonth;
