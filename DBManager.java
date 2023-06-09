@@ -175,6 +175,7 @@ public final class DBManager {
 
                 statement.executeUpdate();
                 this.bookingSuccessful = true;
+                bookingsList.add(booking);
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
