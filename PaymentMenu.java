@@ -887,7 +887,7 @@ public class PaymentMenu extends JFrame {
 
     private void setFrame() {
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        setBackground(Color.WHITE);
+        mainPanel.setBackground(Color.decode("#fff3e9"));
         setLocation(((homepage.screenWidth / 2) - (width / 2)), ((homepage.screenHeight / 2) - (height / 2)));
         setResizable(false);
         setVisible(true);
