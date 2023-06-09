@@ -35,6 +35,7 @@ public final class DBManager {
 
     Connection conn;
 
+    //Constructor for the DBManager class. Initializes the DBManager with  variables and establishes a connection to the database.
     public DBManager() {
         this.projectFolderPath = System.getProperty("user.dir");
         this.databaseFolderPath = "jdbc:derby:" + this.projectFolderPath + "/MarlAvenueHotelDB;create = true";
@@ -47,10 +48,15 @@ public final class DBManager {
         flagBookings();
     }
 
+    // Returns the connection object for the database.
     public Connection getConnection() {
         return this.conn;
     }
 
+    /*Establishes a connection to the database if a connection doesn't already exist.
+    *Prints a success message if the connection is established.
+    *Exits the program with an error message if the connection fails.
+     */
     public void establishConnection() {
         if (conn == null) {
             try {
@@ -65,6 +71,10 @@ public final class DBManager {
         }
     }
 
+    /*Closes the connection to the database if it is open.
+    *Prints a success message if the disconnection is successful.
+    *Prints an error message if the disconnection fails.
+     */
     public void closeConnections() {
         if (conn != null) {
             try {
@@ -76,6 +86,9 @@ public final class DBManager {
         }
     }
 
+    /*Reads the bookings from the BOOKINGLIST table in the database and populates the bookingsList array list.
+    *Converts the retrieved data into Booking objects and adds them to the list.
+    */
     private void readBookingsList() {
         try {
             Statement statement = conn.createStatement();
@@ -83,7 +96,7 @@ public final class DBManager {
 
             while (booking.next()) {
                 Booking newBooking = new Booking();
-                
+
                 String[] bookingDate = booking.getString("BOOKINGDATE").split("/");
                 int dayBook = Integer.parseInt(bookingDate[0]);
                 int monthBook = Integer.parseInt(bookingDate[1]);
@@ -106,14 +119,17 @@ public final class DBManager {
                 newBooking.roomType = room;
                 newBooking.phoneNumber = booking.getString("PHONENUMBER");
                 newBooking.email = booking.getString("EMAIL");
-                
+
                 bookingsList.add(newBooking);
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    /*Creates a Room object based on the provided roomType and returns it.
+    *RoomType is determined by the value stored in the database for the corresponding booking.
+    */
     private Room makeRoom(String roomType) {
         if (roomType.contains("Single")) {
             room = new SingleRoom();
@@ -124,10 +140,13 @@ public final class DBManager {
         } else if (roomType.contains("Group")) {
             room = new GroupRoom();
         }
-        
+
         return room;
     }
 
+    /*Searches for bookings based on the provided first name, surname, and phone number.
+    *Returns an ArrayList of bookings that match the search criteria.
+    */
     public ArrayList<Booking> checkForBooking(String firstName, String surname, String phone) {
         ArrayList<Booking> foundBookings = new ArrayList<>();
         for (Booking token : bookingsList) {
@@ -157,6 +176,10 @@ public final class DBManager {
         return foundBookings;
     }
 
+    /*Adds a new booking to the BOOKINGLIST table in the database.
+    *Inserts the booking data into the corresponding columns of the table.
+    *Sets the bookingSuccessful flag to true if the booking is added successfully.
+     */
     public void addToBookingList(Booking booking) {
         try {
             String query = "INSERT INTO BOOKINGLIST (BOOKINGDATE, BOOKINGLEAVE, FIRSTNAME, SURNAME, ROOMTYPE, STUDENTDISCOUNT, "
@@ -182,14 +205,19 @@ public final class DBManager {
         }
     }
 
+    // Returns the value of the bookingSuccessful flag.
     public boolean isBSuccessful() {
         return this.bookingSuccessful;
     }
 
+    // Resets the bookingSuccessful flag to false.
     public void resetBSuccessful() {
         this.bookingSuccessful = false;
     }
 
+    /*Retrieves bookings from the BOOKINGLIST table that have a booking date in the current month or later.
+    *Inserts these bookings into the FLAGGEDBOOKINGS table for further processing or analysis.
+    */
     private void flagBookings() {
         try {
             ResultSet bookings;
@@ -219,6 +247,9 @@ public final class DBManager {
         }
     }
 
+    /*Inserts a booking from the BOOKINGLIST table into the FLAGGEDBOOKINGS table.
+    *Copies the data from the corresponding columns of the BOOKINGLIST table to the FLAGGEDBOOKINGS table.
+    */
     private void addFlaggedBooking(ResultSet booking) {
         try {
             String query = "INSERT INTO FLAGGEDBOOKINGS (BOOKINGDATE, BOOKINGLEAVE, FIRSTNAME, SURNAME, ROOMTYPE, STUDENTDISCOUNT, "
@@ -241,7 +272,10 @@ public final class DBManager {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    /*Retrieves the questions and answers from the FAQ table in the database.
+    *Populates the faqMap with the retrieved data, where the question is the key and the answer is the value.
+    */
     public void getQuestionsAndAnswers() {
         faqMap = new HashMap<>();
 
@@ -261,10 +295,13 @@ public final class DBManager {
             e.printStackTrace();
         }
     }
-    
+
+    /*Retrieves a map of similar questions and their corresponding answers
+     * based on the user's question.
+     */
     public Map<String, String> getAnswerForQuestion(String question) {
         Map<String, String> similarQ = new HashMap();
-        
+
         String[] compareQ = question.split(" ");
         int count = 0;
         for (Map.Entry<String, String> entry : faqMap.entrySet()) {
@@ -278,13 +315,14 @@ public final class DBManager {
                 }
             }
             double percentage = (double) count;
-            double thirdCompatibility = (((double) compareQ.length + (double) holder.length)) * 0.15;
-            if (percentage >= thirdCompatibility) {
+            double compatibility = (((double) compareQ.length + (double) holder.length)) * 0.25;
+            if (percentage >= compatibility) {
                 similarQ.put(entry.getKey(), entry.getValue());
                 count = 0;
             }
+            
         }
-        
+
         return similarQ;
     }
 }

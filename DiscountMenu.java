@@ -24,7 +24,7 @@ import javax.swing.WindowConstants;
 
 /**
  *
- * @author snipi
+ * @author m4ria
  */
 public class DiscountMenu extends JFrame {
 
@@ -57,6 +57,9 @@ public class DiscountMenu extends JFrame {
     protected boolean validStudentInput;
     protected boolean validChildInput;
 
+    /*Constructs a DiscountMenu object with the specified Homepage and BookingDetails objects.
+     *Initializes various variables and sets up the UI components.
+     */
     public DiscountMenu(Homepage home, BookingDetails bookingDetails) {
         this.homepage = home;
         this.bookDetails = bookingDetails;
@@ -67,6 +70,7 @@ public class DiscountMenu extends JFrame {
         setComponents();
     }
 
+    //Initializes and configures the UI components.
     private void setComponents() {
         discountTitle = new JLabel();
         homeButton = new JButton();
@@ -105,6 +109,7 @@ public class DiscountMenu extends JFrame {
         setFrame();
     }
 
+    //Sets the title label of the discount menu.
     private void setTitle() {
         discountTitle.setFont(new Font("Segoe UI", 0, 24));
         discountTitle.setHorizontalAlignment(SwingConstants.CENTER);
@@ -112,6 +117,7 @@ public class DiscountMenu extends JFrame {
         discountTitle.setBounds(((width / 2) - (200 / 2)), 50, 200, 50);
     }
 
+    //Sets the home button.
     private void setHomeButton() {
         homeButton.setText("Homepage");
         homeButton.setBounds(10, 10, 100, 30);
@@ -124,6 +130,7 @@ public class DiscountMenu extends JFrame {
         });
     }
 
+    //
     private void homeButtonAction(ActionEvent evt) {
         if (bookDetails.isDisplayable()) {
             bookDetails.dispose();
@@ -145,6 +152,7 @@ public class DiscountMenu extends JFrame {
         }
     }
 
+    //Sets the backs button.
     private void setBackButton() {
         backButton.setText("Back");
         backButton.setBounds(10, 50, 100, 30);
@@ -157,6 +165,9 @@ public class DiscountMenu extends JFrame {
         });
     }
 
+    /*Sets up the functionality for the back button. When the back button is
+     * clicked, it navigates back to the previous screen.
+     */
     private void backButtonAction(ActionEvent evt) {
         bookDetails.bDateInput.setText(bookDetails.datePicker.currentDate);
         bookDetails.durationInput.setText("");
@@ -171,60 +182,74 @@ public class DiscountMenu extends JFrame {
         }
     }
 
+    //Sets the child date of birth label.
     private void setStudentDOBLabel() {
         studentDOBLabel.setText("Date of birth:");
         studentDOBLabel.setBounds(230, 130, 90, 20);
     }
 
+    //Sets the child discount radio button.
     private void setStudentDiscount() {
         studentDiscount.setFont(new Font("Segoe UI", 0, 16));
         studentDiscount.setText("Student Discount");
         studentDiscount.setBounds(80, 155, 150, 30);
+        studentDiscount.setBackground(Color.decode("#fff3e9"));
     }
 
+    //Sets the student input text field.
     private void setStudentInput() {
         studentInput.setFont(new Font("Segoe UI", 0, 17));
         studentInput.setBounds(230, 155, 200, 30);
     }
 
+    //Sets the student date of birth format label.
     private void setSDOBFormatLabel() {
         sDOBFormatLabel.setFont(new Font("Segoe UI", 2, 16));
         sDOBFormatLabel.setText("DD/MM/YYYY");
         sDOBFormatLabel.setBounds(230, 190, 100, 25);
     }
 
+    //Sets the student error message label.
     private void setStudentErrMsg() {
         studentErrorMsg.setForeground(Color.red);
         studentErrorMsg.setBounds(450, 155, 250, 30);
     }
 
+    //Sets the child date of birth label.
     private void setChildDOBLabel() {
         childDOBLabel.setText("Date of birth:");
         childDOBLabel.setBounds(230, 265, 90, 20);
     }
 
+    //Sets the child discount radio button.
     private void setChildDiscount() {
         childDiscount.setFont(new Font("Segoe UI", 0, 16));
         childDiscount.setText("Child Discount");
         childDiscount.setBounds(80, 290, 150, 30);
+        childDiscount.setBackground(Color.decode("#fff3e9"));
+
     }
 
+    //Sets the child input text field.
     private void setChildInput() {
         childInput.setFont(new Font("Segoe UI", 0, 17));
         childInput.setBounds(230, 290, 200, 30);
     }
 
+    //Sets the child date of birth format label.
     private void setCDOBFormatLabel() {
         cDOBFormatLabel.setFont(new Font("Segoe UI", 2, 16));
         cDOBFormatLabel.setText("DD/MM/YYYY");
         cDOBFormatLabel.setBounds(230, 325, 100, 25);
     }
 
+    //Sets the child error message label.
     private void setChildErrMsg() {
         childErrorMsg.setForeground(Color.red);
         childErrorMsg.setBounds(450, 290, 250, 30);
     }
 
+    //Sets the apply button.
     private void setApplyButton() {
         applyButton.setText("Apply");
         applyButton.setBounds(((width / 2) - (90 + 20)), (height - (40 + 30)), 90, 40);
@@ -237,6 +262,9 @@ public class DiscountMenu extends JFrame {
         });
     }
 
+    /*Handles the action when the Apply button is clicked.
+    *It performs the necessary validation and applies the selected discount.
+     */
     private void applyButtonAction(ActionEvent evt) {
         applyDiscount();
         if (validStudentInput || validChildInput) {
@@ -255,6 +283,11 @@ public class DiscountMenu extends JFrame {
         }
     }
 
+    /*Applies the selected discount based on the input validation results. If
+     * the student or child input is valid and qualifies for the discount, it
+     * applies the respective discount. If neither input is valid or qualifies
+     * for the discount, it displays an error message.
+     */
     private void applyDiscount() {
         if (selection.getSelection() != null) {
             if (selection.getSelection() == studentDiscount.getModel()) {
@@ -294,6 +327,12 @@ public class DiscountMenu extends JFrame {
         }
     }
 
+    /*Checks the validity of the student's date of birth input and determines
+     * if it qualifies for the discount. Updates the student discount status and
+     * sets the validity of the student input accordingly.
+     * Return true if the student input is valid and qualifies for the
+     * discount, false otherwise
+     */
     private boolean checkStudent() {
         currentDate = LocalDate.now();
         String[] holder = studentInput.getText().split("/");
@@ -324,6 +363,12 @@ public class DiscountMenu extends JFrame {
         return validStudentInput;
     }
 
+    /*Checks the validity of the child's date of birth input and determines if
+     * it qualifies for the discount. Updates the child discount status and sets
+     * the validity of the child input accordingly.
+     * return true if the child input is valid and qualifies for the discount,
+     * false otherwise
+     */
     private boolean checkChild() {
         currentDate = LocalDate.now();
         String[] holder = childInput.getText().split("/");
@@ -368,6 +413,7 @@ public class DiscountMenu extends JFrame {
         return validChildInput;
     }
 
+    //Displays an error message indicating that a discount selection is required.
     private void setSelectionErrorMsg() {
         if (!studentErrorMsg.getText().isEmpty()) {
             studentErrorMsg.setText("");
@@ -379,6 +425,7 @@ public class DiscountMenu extends JFrame {
         childErrorMsg.setText("*Please select a discount");
     }
 
+    //Sets the error message for the student input.
     private void setStudentErrorMsg(String message) {
         if (!studentErrorMsg.getText().isEmpty()) {
             studentErrorMsg.setText("");
@@ -386,6 +433,7 @@ public class DiscountMenu extends JFrame {
         studentErrorMsg.setText(message);
     }
 
+    //Sets the error message for the child input.
     private void setChildErrorMsg(String message) {
         if (!childErrorMsg.getText().isEmpty()) {
             childErrorMsg.setText("");
@@ -393,10 +441,15 @@ public class DiscountMenu extends JFrame {
         childErrorMsg.setText(message);
     }
 
+    /* Sets up the skip button functionality. When the skip button is clicked,
+     * it cancels the current order and prompts the user for confirmation. If
+     * the user confirms, it resets the form and displays a success message. If
+     * the user cancels, it does nothing.
+     */
     private void setSkipButton() {
         skipButton.setText("Skip");
         skipButton.setBounds(((width / 2) + 20), (height - (40 + 30)), 90, 40);
-        
+
         skipButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -405,6 +458,9 @@ public class DiscountMenu extends JFrame {
         });
     }
 
+    /*Handles the action when the Skip button is clicked.
+    * Clears the input fields and navigates to the payment details.
+     */
     private void skipButtonAction(ActionEvent evt) {
         if (!studentInput.getText().isEmpty()) {
             studentInput.setText("");
@@ -423,6 +479,10 @@ public class DiscountMenu extends JFrame {
         setVisible(false);
     }
 
+    /*Sets the main panel of the application. This method is responsible for
+     * creating and configuring the main panel that holds the various components
+     * and content of the application.
+     */
     private void setMainPanel() {
         mainPanel.setPreferredSize(new Dimension(width, height));
         mainPanel.setLayout(null);
@@ -451,9 +511,10 @@ public class DiscountMenu extends JFrame {
         pack();
     }
 
+    //Sets up the main frame of the application.
     private void setFrame() {
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        setBackground(Color.WHITE);
+        mainPanel.setBackground(Color.decode("#fff3e9"));
         setLocation((homepage.screenWidth / 2) - (width / 2), ((homepage.screenHeight / 2) - (height / 2)));
         setResizable(false);
         setVisible(true);

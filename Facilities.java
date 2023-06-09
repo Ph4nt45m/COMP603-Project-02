@@ -4,6 +4,7 @@
  */
 package Project_02;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -20,7 +21,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
-import javax.swing.SwingConstants;
 
 /**
  *
@@ -49,6 +49,7 @@ public class Facilities extends JFrame {
         menu();
     }
 
+    //Sets up the menu of the JFrame by calling various helper methods.
     private void menu() {
         titleLabel = new JLabel();
         descriptionLabel = new JLabel();
@@ -69,6 +70,9 @@ public class Facilities extends JFrame {
         setFrame();
     }
 
+    /*Adds a return button to the main panel with the text "Return to Homepage" 
+    *and sets its position.
+     */
     private void returnToHomepage() {
         returnButton = new JButton("Return to Homepage");
         returnButton.setBounds(10, 40, 150, 20);
@@ -83,25 +87,29 @@ public class Facilities extends JFrame {
         mainPanel.add(returnButton);
     }
 
+    /*Action performed when the homepage button is clicked. Disposes of the
+    *current frame and makes the homepage frame visible.
+     */
     private void homepageButton(ActionEvent event) {
         homepage.setVisible(true);
         this.dispose();
     }
 
+    //Sets up the title label of the JFrame.
     private void title() {
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         titleLabel.setText("Marl Avenue Hotel");
-        titleLabel.setBounds(10, 10, 200, 30);
+        titleLabel.setBounds(20, 10, 200, 30);
     }
 
+    //Sets the title label of the topic.
     private void faciltiesTitle() {
-        descriptionLabel.setFont(new Font("Arial", Font.BOLD, 25));
-        descriptionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        descriptionLabel.setFont(new Font("Segoe UI", Font.BOLD, 25));
         descriptionLabel.setText("Facilities:");
         descriptionLabel.setBounds(220, 50, 300, 50);
     }
 
+    //Sets the WIFI facility name and information in the button and sets the bounds.
     private void wifiButton() {
         wifi = createButton("WIFI", "You have chosen WIFI.\n\n"
                 + "Keep productive whilst staying at Marl Avenue Hotel, with unlimited Wi-Fi in all areas of the hotel. "
@@ -111,6 +119,7 @@ public class Facilities extends JFrame {
         wifi.setBounds(205, 110, 150, 40);
     }
 
+    //Sets the restaurant facility name and information in the button and sets the bounds.
     private void restaurantButton() {
         restaurantBar = createButton("Restaurant & Bar", "You have chosen Restaurant & Bar.\n\n"
                 + "Whether you are a guest at Marl Avenue Hotel or out for a day in the central city, stop by our in-house Amore Restaurant. "
@@ -119,6 +128,7 @@ public class Facilities extends JFrame {
         restaurantBar.setBounds(205, 160, 150, 40);
     }
 
+    //Sets the concierge facility name and information in the button and sets the bounds.
     private void conciergeButton() {
         concierge = createButton("Concierge", "You have chosen Concierge.\n\n"
                 + "If you are looking to explore Auckland and want to know the best places to visit, book local\n"
@@ -128,6 +138,7 @@ public class Facilities extends JFrame {
         concierge.setBounds(205, 210, 150, 40);
     }
 
+    //Sets the sauna facility name and information in the button and sets the bounds.
     private void saunaButton() {
         sauna = createButton("Sauna", "You have chosen Sauna.\n\n"
                 + "A sauna to relax in after your training session.\n");
@@ -135,6 +146,7 @@ public class Facilities extends JFrame {
         sauna.setBounds(205, 260, 150, 40);
     }
 
+    //Sets the fitness facility name and information in the button and sets the bounds.
     private void fitnessButton() {
         fitness = createButton("Fitness Center", "You have chosen Fitness Center.\n\n"
                 + "Stay active with our fitness facilities, designed to work around your\n"
@@ -144,6 +156,7 @@ public class Facilities extends JFrame {
         fitness.setBounds(205, 310, 150, 40);
     }
 
+    //Sets the ;aundry facility name and information in the button and sets the bounds.
     private void laundryButton() {
         laundry = createButton("Laundry Services",
                 "You have chosen the Laundry Service.\n\n"
@@ -160,6 +173,7 @@ public class Facilities extends JFrame {
         laundry.setBounds(205, 360, 150, 40);
     }
 
+    //Sets the pool facility name and information in the button and sets the bounds.
     private void swimmingPoolButton() {
         pool = createButton("Swimming Pools",
                 "You have chosen the Indoor & Outdoor Swimming Pool.\n"
@@ -174,6 +188,7 @@ public class Facilities extends JFrame {
         pool.setBounds(205, 410, 150, 40);
     }
 
+    //Sets the conference room facility name and information in the button and sets the bounds.
     private void conferenceButton() {
         conference = createButton("Conference Rooms", "You have chosen the Conference/Meeting Rooms.\n\n"
                 + "Leave a lasting impression on your guests with our venues modern interiors, floor to ceiling windows,\n"
@@ -187,6 +202,7 @@ public class Facilities extends JFrame {
         conference.setBounds(205, 460, 150, 40);
     }
 
+    // Creates a JButton with the specified text and information.
     private JButton createButton(String buttonText, String information) {
         JButton button = new JButton(buttonText);
 
@@ -200,8 +216,12 @@ public class Facilities extends JFrame {
         return button;
     }
 
+    /*Creates a panel to display facility information and name. But if it's the
+    *restaurant, it adds a button for the Amore restaurant.
+    */
     private void createPanel(String facilityName, String information) {
         JFrame frame = new JFrame();
+        frame.setBackground(Color.decode("#fff3e9"));
         frame.setTitle(facilityName);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -213,27 +233,26 @@ public class Facilities extends JFrame {
         });
 
         int width = 800;
-        int height = 600;
+        int height = 300;
         frame.setSize(width, height);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
 
         JPanel customPanel = new JPanel();
         customPanel.setLayout(null);
+        customPanel.setBackground(Color.decode("#fff3e9"));
 
-        // Title
         JLabel hotelTitleLabel = new JLabel("Marl Avenue Hotel");
-        hotelTitleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        hotelTitleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         hotelTitleLabel.setBounds(20, 10, 200, 30);
 
         JLabel facilityLabel = new JLabel(facilityName);
-        facilityLabel.setFont(new Font("Arial", Font.BOLD, 21));
-        facilityLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        facilityLabel.setBounds(380, 40, 300, 30);
+        facilityLabel.setFont(new Font("Segoe UI", Font.BOLD, 21));
+        facilityLabel.setBounds(340, 40, 300, 30);
 
         JTextPane customTextPane = new JTextPane();
         customTextPane.setText(information);
-        customTextPane.setFont(new Font("Arial", Font.PLAIN, 15));
+        customTextPane.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         customTextPane.setEditable(false);
         customTextPane.setBounds(20, 100, 740, 200);
 
@@ -244,6 +263,7 @@ public class Facilities extends JFrame {
         if (facilityName.equalsIgnoreCase("Restaurant & Bar")) {
             restaurantMenu = new JButton("Amore Menu");
             restaurantMenu.setBounds(600, 520, 150, 20);
+            restaurantMenu.setFont(new Font("Segoe UI", 0, 12));
             customPanel.add(restaurantMenu);
 
             restaurantMenu.addActionListener(new ActionListener() {
@@ -268,7 +288,7 @@ public class Facilities extends JFrame {
 
                         JTextPane menuTextPane = new JTextPane();
                         menuTextPane.setText(menuContent);
-                        menuTextPane.setFont(new Font("Arial", Font.PLAIN, 15));
+                        menuTextPane.setFont(new Font("Segoe UI", Font.PLAIN, 15));
                         menuTextPane.setEditable(false);
                         menuTextPane.setBounds(20, 100, 740, 400);
                         menuFrame.add(menuTextPane);
@@ -302,6 +322,7 @@ public class Facilities extends JFrame {
         }
     }
 
+    //Adds the components to the main panel.
     private void setMainPanel() {
         mainPanel.setPreferredSize(new Dimension(550, 550));
         mainPanel.setLayout(null);
@@ -319,9 +340,11 @@ public class Facilities extends JFrame {
         mainPanel.add(conference);
     }
 
+    //Sets the frame options like title, size, etc.
     private void setFrame() {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        mainPanel.setBackground(Color.decode("#fff3e9"));
         setTitle("Facilities");
         setResizable(false);
         getContentPane().add(mainPanel);

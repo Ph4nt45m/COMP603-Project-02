@@ -19,7 +19,7 @@ import javax.swing.SwingConstants;
 
 /**
  *
- * @author snipi
+ * @author m4ria
  */
 public class BookingMenu extends JFrame {
 
@@ -36,11 +36,13 @@ public class BookingMenu extends JFrame {
     protected RoomTypes roomTypesMenu;
     protected CheckBooking checkBooking;
 
+    //Creates a new instance of the BookingMenu class.
     public BookingMenu(Homepage home) {
         this.homepage = home;
         setComponents();
     }
 
+    //Initializes and sets up the components of the booking menu frame.
     private void setComponents() {
         bookingTitle = new JLabel();
         makeBookingButton = new JButton();
@@ -58,6 +60,7 @@ public class BookingMenu extends JFrame {
         setFrame();
     }
 
+    //Sets title
     private void setTitle() {
         bookingTitle.setFont(new Font("Segoe UI", 0, 24));
         bookingTitle.setHorizontalAlignment(SwingConstants.CENTER);
@@ -65,11 +68,12 @@ public class BookingMenu extends JFrame {
         bookingTitle.setBounds(25, 20, 200, 60);
     }
 
+    //Sets a make booking button and if it's pressed, the action performed occurs
     private void setMakeBookingButton() {
         makeBookingButton.setFont(new Font("Segoe UI", 0, 16));
         makeBookingButton.setText("Make a Booking");
-        makeBookingButton.setBounds(0,0,200,45);
-        
+        makeBookingButton.setBounds(0, 0, 200, 45);
+
         makeBookingButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -78,16 +82,18 @@ public class BookingMenu extends JFrame {
         });
     }
 
+    //Action performed when the "Make a Booking" button is clicked
     private void makeBookingActionPerformed(ActionEvent evt) {
         roomTypesMenu = new RoomTypes(homepage, this);
         setVisible(false);
     }
 
+    //Sets up the "Check my Booking" button.
     private void setCheckBookingButton() {
         checkBookingButton.setFont(new Font("Segoe UI", 0, 16));
         checkBookingButton.setText("Check my Booking");
-        checkBookingButton.setBounds(0,65,200,45);
-        
+        checkBookingButton.setBounds(0, 65, 200, 45);
+
         checkBookingButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -96,16 +102,18 @@ public class BookingMenu extends JFrame {
         });
     }
 
+    ///Action performed when the "Check my Booking" button is clicked.
     private void checkBookingActionPerformed(ActionEvent evt) {
         checkBooking = new CheckBooking(homepage, this);
         setVisible(false);
     }
 
+    //Sets up the "Return to Homepage" button.
     private void setHomeButton() {
         homeButton.setFont(new Font("Segoe UI", 0, 16));
         homeButton.setText("Return to Homepage");
-        homeButton.setBounds(0,130,200,45);
-        
+        homeButton.setBounds(0, 130, 200, 45);
+
         homeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -114,6 +122,7 @@ public class BookingMenu extends JFrame {
         });
     }
 
+    //Action performed when the "Return to Homepage" button is clicked.
     private void homeButtonAction(ActionEvent evt) {
         homepage.setVisible(true);
         homepage.setLocation((homepage.screenWidth / 2) - (homepage.width / 2), ((homepage.screenHeight / 2) - (homepage.height / 2)));
@@ -122,15 +131,18 @@ public class BookingMenu extends JFrame {
         }
     }
 
+    //Sets up the button panel that contains the buttons.
     private void setButtonPanel() {
-        buttonPanel.setBounds(25,100,200,180);
+        buttonPanel.setBounds(25, 100, 200, 180);
         buttonPanel.setLayout(null);
+        buttonPanel.setBackground(Color.decode("#fff3e9"));
 
         buttonPanel.add(makeBookingButton);
         buttonPanel.add(checkBookingButton);
         buttonPanel.add(homeButton);
     }
 
+    //Sets up the main panel that contains the title label and button panel.
     private void setMainPanel() {
         mainPanel.setPreferredSize(new Dimension(width, height));
         mainPanel.setLayout(null);
@@ -139,9 +151,10 @@ public class BookingMenu extends JFrame {
         mainPanel.add(buttonPanel);
     }
 
+    //Sets up the frame properties and behavior.
     private void setFrame() {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        setBackground(Color.WHITE);
+        mainPanel.setBackground(Color.decode("#fff3e9"));
         setLocation(((homepage.screenWidth / 2) - (width / 2)), ((homepage.screenHeight / 2) - (height / 2)));
         setResizable(false);
         getContentPane().add(mainPanel);
@@ -156,7 +169,7 @@ public class BookingMenu extends JFrame {
                 System.exit(0);
             }
         });
-        
+
         setVisible(true);
     }
 }

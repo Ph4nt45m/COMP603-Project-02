@@ -33,6 +33,7 @@ public final class FileManager {
     private LocalDate date;
     private String currentDate;
 
+    //Constructs a new FileManager object. Initializes instance variables for storing room details.
     public FileManager() {
         this.singleRoomDetails = "";
         this.doubleRoomDetails = "";
@@ -41,12 +42,18 @@ public final class FileManager {
         this.details = "";
     }
 
+    /*Constructs a new FileManager object with the given vouchers. Initializes
+     * instance variables for storing vouchers, package index, and current date.
+     */
     public FileManager(Vouchers voucher) {
         this.vouchers = voucher;
         this.packageIndex = 0;
         this.date = LocalDate.now();
     }
 
+    /*Reads the room details from a text file based on the given room type.
+     * Appends the room details to the corresponding instance variables.
+     */
     public String readRoomDetails(String roomType) {
         try {
             br = new BufferedReader(new FileReader("./resources/" + roomType + ".txt"));
@@ -92,6 +99,9 @@ public final class FileManager {
         return this.details;
     }
 
+    /*Generates a voucher based on the selected voucher option in the Vouchers object.
+    * Calls the corresponding method to create the voucher.
+     */
     public void makeVoucher() {
         if (vouchers.voucherOptionsGroup.getSelection() != null) {
             if (vouchers.voucherOptionsGroup.getSelection() == vouchers.packageRadioButton.getModel()) {
@@ -102,6 +112,10 @@ public final class FileManager {
         }
     }
 
+    /* Generates a package voucher and writes the voucher details to a file.
+     * Uses the packageIndex to create a unique file name and adds the voucher
+     * to the voucher list.
+     */
     public void firstVoucher() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         currentDate = date.format(formatter);

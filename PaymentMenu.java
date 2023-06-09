@@ -83,18 +83,21 @@ public class PaymentMenu extends JFrame {
     private Booking booking;
     private Room room;
 
+    // Constructor for PaymentMenu with Homepage and Vouchers parameters
     public PaymentMenu(Homepage home, Vouchers vouchers) {
         this.homepage = home;
         this.vouchers = vouchers;
         setComponents();
     }
 
+    // Constructor for PaymentMenu with Homepage and DiscountMenu parameters
     public PaymentMenu(Homepage home, DiscountMenu discount) {
         this.homepage = home;
         this.discounts = discount;
         setComponents();
     }
 
+    // Initializes and sets up the components of the PaymentMenu
     private void setComponents() {
         paymentTitle = new JLabel();
         homeButton = new JButton();
@@ -152,6 +155,7 @@ public class PaymentMenu extends JFrame {
         setFrame();
     }
 
+    // Sets up the title label of the payment menu
     private void setTitle() {
         paymentTitle.setFont(new Font("Segoe UI", 0, 24));
         paymentTitle.setHorizontalAlignment(SwingConstants.CENTER);
@@ -160,6 +164,7 @@ public class PaymentMenu extends JFrame {
 
     }
 
+// Sets up the home button and its action listener
     private void setHomeButton() {
         homeButton.setText("Homepage");
         homeButton.setBounds(10, 10, 100, 30);
@@ -172,11 +177,13 @@ public class PaymentMenu extends JFrame {
         });
     }
 
+    // Handles the action when the home button is clicked
     private void homeButtonAction(ActionEvent evt) {
         disposeCurrent();
         returnToHome();
     }
 
+    // Sets up the back button and its action listener
     private void setBackButton() {
         backButton.setText("Back");
         backButton.setBounds(10, 50, 100, 30);
@@ -189,6 +196,7 @@ public class PaymentMenu extends JFrame {
         });
     }
 
+    // Handles the action when the back button is clicked
     private void backButtonAction(ActionEvent evt) {
         discounts.setLocation(((homepage.width / 2) - (discounts.width / 2)), ((homepage.height / 2) - (discounts.height / 2)));
         discounts.setVisible(true);
@@ -197,6 +205,7 @@ public class PaymentMenu extends JFrame {
         }
     }
 
+    // Sets up the first name label
     private void setFirstNameLabel() {
         firstNameLabel.setFont(new Font("Segoe UI", 0, 18));
         firstNameLabel.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -204,16 +213,19 @@ public class PaymentMenu extends JFrame {
         firstNameLabel.setBounds(30, 140, 120, 30);
     }
 
+    // Sets up the first name input field
     private void setFirstNameInput() {
         firstNameInput.setFont(new Font("Segoe UI", 0, 17));
         firstNameInput.setBounds(180, 140, 290, 30);
     }
 
+    // Sets up the error message label for the first name input
     private void setFirstNameErrMsg() {
         firstNameErrorMsg.setForeground(Color.red);
         firstNameErrorMsg.setBounds(490, 140, 200, 30);
     }
 
+    // Sets up the surname label
     private void setSurnameLabel() {
         surnameLabel.setFont(new Font("Segoe UI", 0, 18));
         surnameLabel.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -221,16 +233,19 @@ public class PaymentMenu extends JFrame {
         surnameLabel.setBounds(30, 210, 120, 30);
     }
 
+    // Sets up the surname input field
     private void setSurnameInput() {
         surnameInput.setFont(new Font("Segoe UI", 0, 17));
         surnameInput.setBounds(180, 210, 290, 30);
     }
 
+    // Sets up the error message label for the surname input
     private void setSurnameErrMsg() {
         surnameErrorMsg.setForeground(Color.red);
         surnameErrorMsg.setBounds(490, 210, 200, 30);
     }
 
+    // Sets up the phone label
     private void setPhoneLabel() {
         phoneLabel.setFont(new Font("Segoe UI", 0, 18));
         phoneLabel.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -238,22 +253,26 @@ public class PaymentMenu extends JFrame {
         phoneLabel.setBounds(30, 280, 120, 30);
     }
 
+    // Sets up the phone type combo box
     private void setPhoneType() {
         phoneType.setFont(new Font("Segoe UI", 0, 12));
         phoneType.setModel(new DefaultComboBoxModel<>(phoneTypes));
         phoneType.setBounds(180, 280, 90, 30);
     }
 
+    // Sets up the phone input field
     private void setPhoneInput() {
         phoneInput.setFont(new Font("Segoe UI", 0, 17));
         phoneInput.setBounds(270, 280, 200, 30);
     }
 
+    // Sets up the error message label for the phone input
     private void setPhoneErrMsg() {
         phoneErrorMsg.setForeground(Color.red);
         phoneErrorMsg.setBounds(490, 280, 200, 30);
     }
 
+    // Sets up the email label
     private void setEmailLabel() {
         emailLabel.setFont(new Font("Segoe UI", 0, 18));
         emailLabel.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -261,22 +280,26 @@ public class PaymentMenu extends JFrame {
         emailLabel.setBounds(30, 350, 120, 30);
     }
 
+    // Sets up the email input field
     private void setEmailInput() {
         emailInput.setFont(new Font("Segoe UI", 0, 18));
         emailInput.setBounds(180, 350, 290, 30);
     }
 
+    // Sets up the error message label for the email input
     private void setEmailErrMsg() {
         emailErrorMsg.setForeground(Color.red);
         emailErrorMsg.setBounds(490, 350, 200, 30);
     }
 
+    // Sets up the card title label
     private void setCardTitle() {
         cardTitle.setFont(new Font("Segoe UI", 0, 20));
         cardTitle.setText("Card Details:");
         cardTitle.setBounds(180, 440, 130, 30);
     }
 
+    // Sets up the card label
     private void setCardLabel() {
         cardLabel.setFont(new Font("Segoe UI", 0, 18));
         cardLabel.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -284,16 +307,19 @@ public class PaymentMenu extends JFrame {
         cardLabel.setBounds(30, 490, 120, 30);
     }
 
+    // Sets up the card input field
     private void setCardInput() {
         cardInput.setFont(new Font("Segoe UI", 0, 18));
         cardInput.setBounds(180, 490, 290, 30);
     }
 
+    // Sets up the error message label for the card input
     private void setCardErrMsg() {
         cardErrorMsg.setForeground(Color.red);
         cardErrorMsg.setBounds(490, 490, 200, 30);
     }
 
+    // Sets up the expiry label
     private void setExpiryLabel() {
         expiryLabel.setFont(new Font("Segoe UI", 0, 18));
         expiryLabel.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -301,22 +327,26 @@ public class PaymentMenu extends JFrame {
         expiryLabel.setBounds(30, 560, 120, 30);
     }
 
+    // Sets up the expiry input field
     private void setExpiryInput() {
         expiryInput.setFont(new Font("Segoe UI", 0, 18));
         expiryInput.setBounds(180, 560, 290, 30);
     }
 
+    // Sets up the error message label for the expiry input
     private void setExpiryErrMsg() {
         expiryErrorMsg.setForeground(Color.red);
         expiryErrorMsg.setBounds(490, 560, 200, 30);
     }
 
+    // Sets up the expiry format label
     private void setExpiryFormatLabel() {
         expiryFormatLabel.setFont(new Font("Segoe UI", 2, 16));
         expiryFormatLabel.setText("MM/YYYY");
         expiryFormatLabel.setBounds(180, 595, 90, 25);
     }
 
+    // Sets up the save button and its action listener
     private void setSaveButton() {
         saveButton.setFont(new Font("Segoe UI", 0, 18));
         saveButton.setText("Save");
@@ -330,6 +360,7 @@ public class PaymentMenu extends JFrame {
         });
     }
 
+    // Handles the action when the save button is clicked
     private void saveButtonAction(ActionEvent evt) {
         firstNameErrorMsg.setText("");
         surnameErrorMsg.setText("");
@@ -421,6 +452,11 @@ public class PaymentMenu extends JFrame {
         }
     }
 
+    /*Verifies the validity of the first name entered in the firstNameInput field.
+    *Trims the input, checks if it is empty, and removes any whitespace.
+    *Checks if the input contains only alphabetic characters and capitalizes the first letter if it is valid.
+    *Returns false if the input is empty or contains non-alphabetic characters, otherwise it returns true
+     */
     private boolean verifyFirstName() {
         String trimInput = firstNameInput.getText().trim();
         firstNameInput.setText(trimInput);
@@ -465,6 +501,11 @@ public class PaymentMenu extends JFrame {
         return true;
     }
 
+    /*Verifies the validity of the last name entered in the surnameInput field.
+    *Trims the input, checks if it is empty, and removes any whitespace.
+    *Checks if the input contains only alphabetic characters and capitalizes the first letter if it is valid.
+    *Returns false if the input is empty or contains non-alphabetic characters, otherwise it returns true
+     */
     private boolean verifySurname() {
         String trimInput = surnameInput.getText().trim();
         surnameInput.setText(trimInput);
@@ -509,6 +550,7 @@ public class PaymentMenu extends JFrame {
         return true;
     }
 
+    // Validates the phone input based on the selected phone type. Returns true if the input is valid, false otherwise
     private boolean verifyPhone() {
         String trimInput = phoneInput.getText().trim();
         phoneInput.setText(trimInput);
@@ -527,6 +569,7 @@ public class PaymentMenu extends JFrame {
         return valid;
     }
 
+    // Validates the phone input based on the selected phone type. Returns true if the input is valid, false otherwise
     private boolean homePhone() {
         String holder = phoneInput.getText();
         String temp = "";
@@ -569,8 +612,8 @@ public class PaymentMenu extends JFrame {
                     phoneNumber = "09 " + phoneInput.getText();
                 }
             } else {
-                phoneNumber = "09 " + phoneInput.getText().substring(0, 3) +
-                        " " + phoneInput.getText().substring(3);
+                phoneNumber = "09 " + phoneInput.getText().substring(0, 3)
+                        + " " + phoneInput.getText().substring(3);
             }
         } else {
             return false;
@@ -579,6 +622,7 @@ public class PaymentMenu extends JFrame {
         return true;
     }
 
+    // Validates the phone input based on the selected phone type. Returns true if the input is valid, false otherwise
     private boolean mobilePhone() {
         String holder = phoneInput.getText();
         String temp = "";
@@ -636,15 +680,15 @@ public class PaymentMenu extends JFrame {
                     if (check[0].length() != 2 || check[1].length() != 7) {
                         return false;
                     } else {
-                        phoneNumber = "+64 " + temp.substring(0,2) + " " +
-                                temp.substring(2,5) + " " +
-                                temp.substring(5);
+                        phoneNumber = "+64 " + temp.substring(0, 2) + " "
+                                + temp.substring(2, 5) + " "
+                                + temp.substring(5);
                     }
                 }
             } else {
-                phoneNumber = "+64 " + temp.substring(0,2) + " " +
-                        temp.substring(2,5) + " " +
-                        temp.substring(5);
+                phoneNumber = "+64 " + temp.substring(0, 2) + " "
+                        + temp.substring(2, 5) + " "
+                        + temp.substring(5);
             }
             phoneInput.setText(temp);
         } else {
@@ -654,6 +698,7 @@ public class PaymentMenu extends JFrame {
         return true;
     }
 
+    // Validates the email input. Returns true if the input is valid, false otherwise
     private boolean verifyEmail() {
         String trimInput = emailInput.getText().trim();
         emailInput.setText(trimInput);
@@ -693,6 +738,7 @@ public class PaymentMenu extends JFrame {
         return validEmail;
     }
 
+    // Validates and formats the card number input. Returns true if the input is valid, false otherwise
     private boolean verifyCard() {
         String trimInput = cardInput.getText().trim();
         cardInput.setText(trimInput);
@@ -748,6 +794,7 @@ public class PaymentMenu extends JFrame {
         return validCard;
     }
 
+    // Validates the expiry date input. Returns true if the input is valid, false otherwise
     private boolean verifyExpiry() {
         String trimInput = expiryInput.getText().trim();
         expiryInput.setText(trimInput);
@@ -780,6 +827,7 @@ public class PaymentMenu extends JFrame {
         return validExpiry;
     }
 
+    // Validates if the characters in the date input are valid. Returns true if the characters are valid, false otherwise
     private boolean verifyCharacters(String date) {
         boolean valid = true;
         if (date.length() != 7) {
@@ -822,6 +870,7 @@ public class PaymentMenu extends JFrame {
         return valid;
     }
 
+    // Verifies if the given date is valid. Returns true if the date is valid, false otherwise
     private boolean verifyDate(String date) {
         currentDate = LocalDate.now();
         expired = false;
@@ -851,6 +900,7 @@ public class PaymentMenu extends JFrame {
         return valid;
     }
 
+    // Sets up the main panel of the GUI
     private void setMainPanel() {
         mainPanel.setPreferredSize(new Dimension(width, height));
         mainPanel.setLayout(null);
@@ -885,6 +935,7 @@ public class PaymentMenu extends JFrame {
         pack();
     }
 
+    // Sets up the frame settings
     private void setFrame() {
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         mainPanel.setBackground(Color.decode("#fff3e9"));
@@ -903,11 +954,13 @@ public class PaymentMenu extends JFrame {
         });
     }
 
+    // Disposes of the current voucher details and vouchers frame
     private void disposeVoucherCurrent() {
         vouchers.voucherDetails.dispose();
         vouchers.dispose();
     }
 
+    // Disposes of the current discounts and its related frames if they are displayable
     private void disposeCurrent() {
         if (discounts.isDisplayable()) {
             discounts.dispose();
@@ -926,6 +979,7 @@ public class PaymentMenu extends JFrame {
         }
     }
 
+    // Sets the location and visibility of the homepage frame, and disposes the current frame if it is displayable
     private void returnToHome() {
         homepage.setLocation((homepage.screenWidth / 2) - (homepage.width / 2), ((homepage.screenHeight / 2) - (homepage.height / 2)));
         homepage.setVisible(true);
@@ -934,6 +988,7 @@ public class PaymentMenu extends JFrame {
         }
     }
 
+    // Creates a new room object based on the selected room type from the homepage booking menu
     private void makeRoom() {
         if (homepage.bookingMenu.roomTypesMenu.selectedRoom.contains("Single")) {
             room = new SingleRoom();

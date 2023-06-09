@@ -6,17 +6,19 @@ package Project_02;
 
 /**
  *
- * @author snipi
+ * @author m4ria
  */
 public class FamilyRoom extends Room {
 
     private boolean hasChildren;
-    
+
+    //Constructs a new FamilyRoom object.
     public FamilyRoom() {
         super("Family Room", 350.00);
         this.hasChildren = false;
     }
 
+    //Calculates the cost of the family room based on whether it has children or not.
     @Override
     public double calculateCost() {
         if (hasChildren()) {
@@ -25,12 +27,14 @@ public class FamilyRoom extends Room {
 
         return this.cost;
     }
-    
+
+    //Checks if the family room has children.
     @Override
     public boolean hasChildren() {
         return hasChildren;
     }
-    
+
+    //Sets the status of whether the family room has children or not.
     @Override
     public void setHasChildren(boolean hasChildren) {
         this.hasChildren = hasChildren;

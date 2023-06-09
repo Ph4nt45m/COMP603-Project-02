@@ -23,7 +23,7 @@ import javax.swing.SwingConstants;
 
 /**
  *
- * @author snipi
+ * @author m4ria
  */
 public class BookingDetails extends JFrame {
 
@@ -54,6 +54,7 @@ public class BookingDetails extends JFrame {
     protected Date dateBooked;
     protected Date dateLeave;
 
+    // Initialize variables and components
     public BookingDetails(Homepage home, RoomTypes rmTypes) {
         this.homepage = home;
         this.roomTypes = rmTypes;
@@ -63,6 +64,7 @@ public class BookingDetails extends JFrame {
         setComponents();
     }
 
+    // Method to set up all the GUI components
     private void setComponents() {
         homeButton = new JButton();
         backButton = new JButton();
@@ -94,6 +96,7 @@ public class BookingDetails extends JFrame {
         setFrame();
     }
 
+    // Set properties and listeners for the home button
     private void setHomeButton() {
         homeButton.setText("Homepage");
         homeButton.setBounds(10, 10, 100, 30);
@@ -106,6 +109,7 @@ public class BookingDetails extends JFrame {
         });
     }
 
+    //Handles the action when the home button is clicked.
     private void homeButtonAction(ActionEvent evt) {
         if (!roomTypes.booking.isDisplayable()) {
             roomTypes.booking.dispose();
@@ -135,6 +139,7 @@ public class BookingDetails extends JFrame {
         }
     }
 
+    // Set properties and listeners for the back button
     private void setBackButton() {
         backButton.setText("Back");
         backButton.setBounds(10, 50, 100, 30);
@@ -147,6 +152,7 @@ public class BookingDetails extends JFrame {
         });
     }
 
+    //Handles the action when the back button is clicked.
     private void backButtonAction(ActionEvent evt) {
         if (datePicker.isDisplayable()) {
             datePicker.dispose();
@@ -161,6 +167,7 @@ public class BookingDetails extends JFrame {
         }
     }
 
+    // Set properties for the title label
     private void setTitle() {
         title.setFont(new Font("Segoe UI", 0, 24));
         title.setHorizontalAlignment(SwingConstants.CENTER);
@@ -168,6 +175,7 @@ public class BookingDetails extends JFrame {
         title.setBounds(265, 40, 270, 50);
     }
 
+    // Set properties for the booking date label
     private void setBDateLabel() {
         bDateLabel.setFont(new Font("Segoe UI", 0, 18));
         bDateLabel.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -175,6 +183,7 @@ public class BookingDetails extends JFrame {
         bDateLabel.setBounds(30, 140, 200, 30);
     }
 
+    // Set properties for the booking date input field
     private void setBDateInput() {
         bDateInput.setFont(new Font("Segoe UI", 0, 17));
         bDateInput.setBounds(240, 140, 290, 30);
@@ -191,17 +200,20 @@ public class BookingDetails extends JFrame {
         });
     }
 
+    // Set properties for the booking date error message label
     private void setBDateErrorMsg() {
         bDateErrorMsg.setForeground(Color.red);
         bDateErrorMsg.setBounds(540, 140, 250, 30);
     }
 
+    // Set properties for the booking date format label
     private void setBDateFormatLabel() {
         bDateFormatLabel.setFont(new Font("Segoe UI", 2, 15));
         bDateFormatLabel.setText("DD/MM/YYYY");
         bDateFormatLabel.setBounds(245, 170, 120, 20);
     }
 
+    // Set properties for the duration label
     private void setDurationLabel() {
         durationLabel.setFont(new Font("Segoe UI", 0, 18));
         durationLabel.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -209,6 +221,7 @@ public class BookingDetails extends JFrame {
         durationLabel.setBounds(30, 230, 200, 30);
     }
 
+    // Set properties for the duration input field
     private void setDurationInput() {
         durationInput.setFont(new Font("Segoe UI", 0, 17));
         durationInput.setBounds(240, 228, 290, 30);
@@ -223,17 +236,20 @@ public class BookingDetails extends JFrame {
         });
     }
 
+    // Set properties for the duration error message label
     private void setDurationErrorMsg() {
         lDateErrorMsg.setForeground(Color.red);
         lDateErrorMsg.setBounds(540, 228, 250, 30);
     }
 
+    // Set properties for the duration format label
     private void setDurationFormatLabel() {
         durationFormatLabel.setFont(new Font("Segoe UI", 2, 15));
         durationFormatLabel.setText("Number of days (Max: 100)");
         durationFormatLabel.setBounds(245, 260, 200, 30);
     }
 
+    // Set properties and listeners for the book button
     private void setBookButton() {
         bookButton.setFont(new Font("Segoe UI", 0, 18));
         bookButton.setText("Book Room");
@@ -247,6 +263,10 @@ public class BookingDetails extends JFrame {
         });
     }
 
+    /*Method to handle the book button click. Validates the input dates and
+     * displays any error messages if necessary. If the dates are valid, opens
+     * the discount menu and hides the current window.
+     */
     private void bookButtonAction(ActionEvent evt) {
         if (!bDateErrorMsg.getText().isEmpty()) {
             bDateErrorMsg.setText("");
@@ -285,6 +305,7 @@ public class BookingDetails extends JFrame {
         }
     }
 
+    //Verifies the inputted booking date.
     private void verifyBookDate() {
         String holder = bDateInput.getText();
         boolean validChars = true;
@@ -344,10 +365,15 @@ public class BookingDetails extends JFrame {
         }
     }
 
+    //Sets the date booked to the specified day, month, and year.
     private void setDateBooked(int day, int month, int year) {
         dateBooked = new Date(day, month, year);
     }
 
+    /*Sets the error message for the booking date input field. If the input
+     * field is empty, it displays a required field error message. Resets the
+     * input field to the current date.
+     */
     private void setBDateErrMsg() {
         if (bDateInput.getText().isEmpty()) {
             bDateErrorMsg.setText("* Text field required");
@@ -356,6 +382,7 @@ public class BookingDetails extends JFrame {
         bDateInput.setText(datePicker.currentDate);
     }
 
+    //Verifies the inputted leave date.
     private void verifyLeaveDate() {
         String holder = durationInput.getText();
         boolean valid = true;
@@ -393,6 +420,7 @@ public class BookingDetails extends JFrame {
         }
     }
 
+    //Sets the leave date based on the current date and duration.
     private void setDateLeave(int duration, int currentDay, int currentMonth, int currentYear) {
         int day = currentDay;
         int month = currentMonth;
@@ -415,6 +443,7 @@ public class BookingDetails extends JFrame {
         }
     }
 
+    //Sets the late date error message.
     private void setLDateErrMsg() {
         if (durationInput.getText().isEmpty()) {
             lDateErrorMsg.setText("* Text field required");
@@ -423,6 +452,7 @@ public class BookingDetails extends JFrame {
         durationInput.setText("");
     }
 
+    //Sets the maximum day limit for a given month and year.
     protected int setDayLimit(int month, int year) {
         int limit = 0;
         if (month == 2) {
@@ -446,6 +476,7 @@ public class BookingDetails extends JFrame {
         return limit;
     }
 
+    //Verifies the characters in the given date.
     protected boolean verifyCharacters(String date) {
         boolean valid = true;
         if (!(date.length() > 7 && date.length() <= 10)) {
@@ -491,6 +522,7 @@ public class BookingDetails extends JFrame {
         return valid;
     }
 
+    // Set properties for the main panel and add components to it
     private void setMainPanel() {
         mainPanel.setPreferredSize(new Dimension(width, height));
         mainPanel.setLayout(null);
@@ -509,9 +541,10 @@ public class BookingDetails extends JFrame {
         mainPanel.add(lDateErrorMsg);
     }
 
+    // Set properties for the frame
     private void setFrame() {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        setBackground(Color.WHITE);
+        mainPanel.setBackground(Color.decode("#fff3e9"));
         setLocation(((homepage.screenWidth / 2) - (width / 2)), ((homepage.screenHeight / 2) - (height / 2)));
         setResizable(false);
         getContentPane().add(mainPanel);

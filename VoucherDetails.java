@@ -16,23 +16,35 @@ import java.awt.event.ActionListener;
  */
 public class VoucherDetails extends JFrame {
 
-    private JPanel mainPanel;
+    Homepage homepage;
+    Vouchers vouchers;
+    PaymentMenu paymentMenu;
+
+    private final JPanel mainPanel;
     private JTextField recipientField;
     private JTextField giverField;
-    JButton returnButton;
-    Homepage homepage;
-    private JTextField amountField = null; // Declare at the class level
+    private JButton returnButton;
+    private JTextField amountField = null;
     private JButton backButton;
     private JButton purchaseButton;
-    Vouchers vouchers;
+    private JLabel titleLabel;
+    private JLabel voucherLabel;
+    private JLabel recipientLabel;
+    private JLabel giverLabel;
+    private JLabel amountLabel;
     protected String recipient;
     protected String giver;
 
+    /*Constructs a VoucherDetails object with the specified Vouchers and 
+    *Homepage objects.
+     */
     public VoucherDetails(Vouchers vouchers, Homepage home) {
         this.homepage = home;
         this.vouchers = vouchers;
+
         mainPanel = new JPanel();
         mainPanel.setLayout(null);
+        mainPanel.setBackground(Color.decode("#fff3e9"));
         mainPanel.setPreferredSize(new Dimension(500, 300));
 
         setResizable(false);
@@ -55,6 +67,7 @@ public class VoucherDetails extends JFrame {
         });
     }
 
+    //Sets up the menu of the JFrame by calling various helper methods.
     private void menu() {
         setTitle("Vouchers");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,15 +81,19 @@ public class VoucherDetails extends JFrame {
         pack();
     }
 
+    //Sets up the title label of the JFrame.
     private void title() {
 
-        JLabel titleLabel = new JLabel("Marl Avenue Hotel");
+        titleLabel = new JLabel("Marl Avenue Hotel");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
         titleLabel.setBounds(20, 10, 200, 30);
 
         mainPanel.add(titleLabel);
     }
 
+    /*Adds a return button to the main panel with the text "Return to Homepage" 
+    *and sets its position.
+     */
     private void returnToHomepage() {
 
         returnButton = new JButton("Return to Homepage");
@@ -85,6 +102,7 @@ public class VoucherDetails extends JFrame {
         mainPanel.add(returnButton);
     }
 
+    //Creates a back button and adds it to the JFrame.
     private void createBackButton() {
         backButton = new JButton("Back");
         backButton.setBounds(20, 70, 100, 20);
@@ -98,18 +116,21 @@ public class VoucherDetails extends JFrame {
         mainPanel.add(backButton);
     }
 
+    /*Creates the form for entering recipient and giver information based on 
+    *the selected voucher type.
+     */
     private void createForm(String voucherType) {
-        JLabel titleLabel = new JLabel("Voucher Details");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        titleLabel.setBounds(220, 70, 250, 30);
+        voucherLabel = new JLabel("Voucher Details");
+        voucherLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        voucherLabel.setBounds(220, 70, 250, 30);
 
-        JLabel recipientLabel = new JLabel("Recipient:");
+        recipientLabel = new JLabel("Recipient:");
         recipientLabel.setBounds(20, 120, 80, 20);
 
         recipientField = new JTextField();
         recipientField.setBounds(100, 120, 200, 20);
 
-        JLabel giverLabel = new JLabel("Giver:");
+        giverLabel = new JLabel("Giver:");
         giverLabel.setBounds(20, 150, 80, 20);
 
         giverField = new JTextField();
@@ -122,7 +143,7 @@ public class VoucherDetails extends JFrame {
         mainPanel.add(giverField);
 
         if (voucherType.equalsIgnoreCase("Momentary Gift Voucher")) {
-            JLabel amountLabel = new JLabel("Amount:");
+            amountLabel = new JLabel("Amount:");
             amountLabel.setBounds(20, 180, 80, 20);
 
             amountField = new JTextField();
@@ -131,53 +152,9 @@ public class VoucherDetails extends JFrame {
             mainPanel.add(amountLabel);
             mainPanel.add(amountField);
         }
-
-//        mainPanel.add(continueButton);
     }
 
-//    private void continueButtonClicked() {
-//        recipient = recipientField.getText();
-//        giver = giverField.getText();
-//
-//        if (amountField != null) {
-//            // $200 gift voucher
-//            String amount = amountField.getText();
-//            System.out.println("Recipient: " + recipient);
-//            System.out.println("Giver: " + giver);
-//            System.out.println("Amount: " + amount);
-//        } else {
-//            // Momentary gift voucher
-//            System.out.println("Recipient: " + recipient);
-//            System.out.println("Giver: " + giver);
-//        }
-//
-//        // Close the current frame
-//        this.dispose();
-//    }
-//    private void purchaseButton() {
-//
-//        JButton purchase = new JButton("Purchase");
-//        purchase.setBounds(380, 270, 100, 20);
-//
-//        purchase.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                purchaseButtonClicked();
-//            }
-//        });
-//
-//        mainPanel.add(purchase);
-//    }
-//
-//    private void purchaseButtonClicked() {
-//
-////        String selectedVoucher = voucherOptionsGroup.getSelection().getActionCommand();
-//        PaymentMenu paymentMenu = new PaymentMenu(homepage, this);
-//        paymentMenu.setVisible(true);
-//
-//        // Close the Vouchers frame if payment is successful
-//        this.dispose();
-//    }
+    //Adds a purchase button to the JFrame.
     private void purchaseButton() {
         purchaseButton = new JButton();
         purchaseButton.setText("Purchase");
@@ -189,24 +166,34 @@ public class VoucherDetails extends JFrame {
                 purchaseButtonAction(e);
             }
         });
-        
+
         mainPanel.add(purchaseButton);
     }
 
+    /*Action performed when the purchase button is clicked. Creates a 
+    *PaymentMenu object, sets its location, makes it visible, and disposes of 
+    *the current frame.
+     */
     private void purchaseButtonAction(ActionEvent evt) {
-        PaymentMenu paymentMenu = new PaymentMenu(homepage, vouchers);
+        paymentMenu = new PaymentMenu(homepage, vouchers);
         paymentMenu.setLocationRelativeTo(null);
         paymentMenu.setVisible(true);
+
         dispose();
     }
 
+    /*Action performed when the homepage button is clicked. Disposes of the
+    *current frame and makes the homepage frame visible.
+     */
     private void homepageButton(ActionEvent event) {
         this.dispose();
         homepage.setVisible(true);
     }
 
+    /*Action performed when the back button is clicked. Disposes of the current 
+    *frame and makes the vouchers frame visible.
+     */
     private void backButtonClicked() {
-        // Dispose the current frame and show the homepage frame
         this.dispose();
         vouchers.setVisible(true);
     }

@@ -26,7 +26,7 @@ import javax.swing.SwingConstants;
 
 /**
  *
- * @author snipi
+ * @author m4ria
  */
 public class CheckBooking extends JFrame {
 
