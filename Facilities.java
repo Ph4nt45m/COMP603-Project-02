@@ -234,6 +234,7 @@ public class Facilities extends JFrame {
 
         int width = 800;
         int height = 400;
+
         frame.setSize(width, height);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);

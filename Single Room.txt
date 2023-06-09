@@ -1,0 +1,8 @@
+Main Features
+- Bed Options:
+    - Single king size bed
+    - Single double bed
+- Bathroom
+- Closet
+- Television
+- Mini fridge (Stocked - Extra charges applied on consumption)
